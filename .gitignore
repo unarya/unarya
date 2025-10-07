@@ -1,0 +1,6 @@
+.idea
+api/.idea
+api/bin
+api/packages
+engine/.idea
+engine/bin
