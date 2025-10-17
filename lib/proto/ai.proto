@@ -1,0 +1,21 @@
+syntax = "proto3";
+
+package aipb;
+
+option go_package = "github.com/unarya/unarya/lib/proto/pb/aipb";
+
+// --- AI Service ---
+// Performs semantic and risk analysis on parsed code or reports
+service AIService {
+  rpc AnalyzeCode(AIAnalyzeRequest) returns (AIAnalyzeResponse);
+}
+
+message AIAnalyzeRequest {
+  string language = 1;
+  string code_structure = 2;
+}
+
+message AIAnalyzeResponse {
+  string insights = 1; // e.g., "Detected MVC pattern", "Possible logic flaw"
+  string confidence = 2;
+}
