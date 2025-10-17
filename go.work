@@ -1,0 +1,10 @@
+
+go 1.25.0
+
+use (
+	.
+	cmd/orchestrator
+	cmd/collector
+	cmd/parser
+	cmd/security_scan
+)

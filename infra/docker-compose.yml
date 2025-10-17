@@ -1,0 +1,125 @@
+services:
+  # ==========================================================
+  # 1. Collector Service
+  # ----------------------------------------------------------
+  collector:
+    image: unarya-collector:dev
+    container_name: unarya-collector
+    restart: always
+    build:
+      context: .
+      dockerfile: ./cmd/collector/Dockerfile
+    env_file:
+      - ../configs/.env
+    ports:
+      - "50051:50051" # gRPC port
+    networks:
+      - unarya_net
+    depends_on:
+      - orchestrator
+    volumes:
+      - ../:/app
+    working_dir: /app/cmd/collector
+    entrypoint: [ "/bin/sh", "-c", "/app/cmd/collector/entrypoint.sh" ]
+
+  # ==========================================================
+  # 2. Parser Service
+  # ----------------------------------------------------------
+  parser:
+    image: unarya-parser:dev
+    container_name: unarya-parser
+    restart: always
+    build:
+      context: .
+      dockerfile: ./cmd/parser/Dockerfile
+    env_file:
+      - ../configs/.env
+    ports:
+      - "50052:50052"
+    networks:
+      - unarya_net
+    depends_on:
+      - collector
+    volumes:
+      - ../:/app
+    working_dir: /app/cmd/parser
+    entrypoint: [ "/bin/sh", "-c", "/app/cmd/parser/entrypoint.sh" ]
+
+  # ==========================================================
+  # 3. Security Scanner Service
+  # ----------------------------------------------------------
+  security_scan:
+    image: unarya-security-scan:dev
+    container_name: unarya-security-scan
+    restart: always
+    build:
+      context: .
+      dockerfile: ./cmd/security_scan/Dockerfile
+    env_file:
+      - ../configs/.env
+    ports:
+      - "50053:50053"
+    networks:
+      - unarya_net
+    depends_on:
+      - parser
+    volumes:
+      - ../:/app
+    working_dir: /app/cmd/security_scan
+    entrypoint: [ "/bin/sh", "-c", "/app/cmd/security_scan/entrypoint.sh" ]
+
+  # ==========================================================
+  # 4. Orchestrator Service
+  # ----------------------------------------------------------
+  orchestrator:
+    image: unarya-orchestrator:dev
+    container_name: unarya-orchestrator
+    restart: always
+    build:
+      context: .
+      dockerfile: ./cmd/orchestrator/Dockerfile
+    env_file:
+      - ../configs/.env
+    ports:
+      - "50054:50054"
+    networks:
+      - unarya_net
+    depends_on:
+      - parser
+      - security_scan
+      - collector
+      - ai_model
+    volumes:
+      - ../:/app
+    working_dir: /app/cmd/orchestrator
+    entrypoint: [ "/bin/sh", "-c", "/app/cmd/orchestrator/entrypoint.sh" ]
+
+  # ==========================================================
+  # 5. AI Model Service (Python-based)
+  # ----------------------------------------------------------
+  ai_model:
+    image: unarya-ai:dev
+    container_name: unarya-ai
+    restart: always
+    build:
+      context: ./ai
+      dockerfile: Dockerfile
+    env_file:
+      - ../configs/.env
+    ports:
+      - "6000:6000" # AI model inference port
+    networks:
+      - unarya_net
+    volumes:
+      - ../ai/models:/models
+      - ../data:/data
+    environment:
+      - MODEL_NAME=unarya-intelligence
+      - MODEL_PORT=6000
+
+# ==========================================================
+# 📡 Networks
+# ----------------------------------------------------------
+networks:
+  unarya_net:
+    driver: bridge
