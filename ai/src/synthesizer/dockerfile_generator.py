@@ -1,4 +1,4 @@
-from .types import CodeContext
+from .schemas import CodeContext
 from .template_engine import TemplateEngine
 
 class DockerfileGenerator:

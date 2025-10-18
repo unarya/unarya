@@ -1,6 +1,6 @@
 import json
 from typing import List
-from .types import Dataset, Example
+from .schemas import Dataset, Example
 
 class DatasetLoader:
     """Tải tập dữ liệu huấn luyện từ tệp hoặc thư mục."""

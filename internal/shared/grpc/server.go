@@ -5,8 +5,8 @@ import (
 	"fmt"
 	"net"
 
-	"unarya/internal/shared/auth"
-	"unarya/internal/shared/logging"
+	"github.com/unarya/unarya/internal/shared/auth"
+	"github.com/unarya/unarya/internal/shared/logging"
 
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/metadata"

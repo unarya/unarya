@@ -1,6 +1,6 @@
 import numpy as np
 from typing import List
-from .types import LanguageResult
+from .schemas import LanguageResult
 from .model_loader import ModelLoader
 
 class LanguageClassifier:

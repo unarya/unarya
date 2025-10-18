@@ -1,6 +1,6 @@
 import re
 from typing import List
-from .types import Framework
+from .schemas import Framework
 
 class FrameworkClassifier:
     """Nhận diện framework phổ biến dựa trên nội dung mã."""

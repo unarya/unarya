@@ -1,11 +1,42 @@
 syntax = "proto3";
 
-package aipb;
+package pb.aipb;
 
 option go_package = "github.com/unarya/unarya/lib/proto/pb/aipb";
 
 // --- AI Service ---
 // Performs semantic and risk analysis on parsed code or reports
+service AIInference {
+  // Unary predict: single input -> single output
+  rpc Predict(PredictRequest) returns (PredictResponse) {}
+
+
+  // Batch predict
+  rpc PredictBatch(PredictBatchRequest) returns (PredictBatchResponse) {}
+
+
+  // Control endpoint to reload a model or query status
+  rpc ReloadModel(ReloadModelRequest) returns (ReloadModelResponse) {}
+  rpc Status(StatusRequest) returns (StatusResponse) {}
+}
+
+
+message PredictRequest {
+  bytes input = 1; // opaque input, typically serialized tensor(s)
+  string model = 2; // optional model name/version
+}
+
+
+message PredictResponse {
+  bytes output = 1; // opaque output, typically serialized tensor(s)
+}
+
+
+message PredictBatchRequest {
+  repeated bytes inputs = 1;
+  string model = 2;
+}
+
 service AIService {
   rpc AnalyzeCode(AIAnalyzeRequest) returns (AIAnalyzeResponse);
 }
@@ -18,4 +49,31 @@ message AIAnalyzeRequest {
 message AIAnalyzeResponse {
   string insights = 1; // e.g., "Detected MVC pattern", "Possible logic flaw"
   string confidence = 2;
+}
+
+
+
+message PredictBatchResponse {
+  repeated bytes outputs = 1;
+}
+
+
+message ReloadModelRequest {
+  string model_path = 1; // path or object store URI
+}
+
+
+message ReloadModelResponse {
+  bool ok = 1;
+  string message = 2;
+}
+
+
+message StatusRequest {}
+
+
+message StatusResponse {
+  string model = 1;
+  string version = 2;
+  string state = 3; // e.g., "loaded", "error", "no_model"
 }

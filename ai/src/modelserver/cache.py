@@ -1,6 +1,6 @@
 import time
 from typing import Any, Dict
-from .types import CacheEntry
+from .schemas import CacheEntry
 
 class ResultCache:
     """Bộ nhớ đệm kết quả inference để tăng tốc phản hồi."""

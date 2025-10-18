@@ -19,15 +19,240 @@ import (
 const _ = grpc.SupportPackageIsVersion9
 
 const (
-	AIService_AnalyzeCode_FullMethodName = "/aipb.AIService/AnalyzeCode"
+	AIInference_Predict_FullMethodName      = "/pb.aipb.AIInference/Predict"
+	AIInference_PredictBatch_FullMethodName = "/pb.aipb.AIInference/PredictBatch"
+	AIInference_ReloadModel_FullMethodName  = "/pb.aipb.AIInference/ReloadModel"
+	AIInference_Status_FullMethodName       = "/pb.aipb.AIInference/Status"
 )
 
-// AIServiceClient is the client API for AIService service.
+// AIInferenceClient is the client API for AIInference service.
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 //
 // --- AI Service ---
 // Performs semantic and risk analysis on parsed code or reports
+type AIInferenceClient interface {
+	// Unary predict: single input -> single output
+	Predict(ctx context.Context, in *PredictRequest, opts ...grpc.CallOption) (*PredictResponse, error)
+	// Batch predict
+	PredictBatch(ctx context.Context, in *PredictBatchRequest, opts ...grpc.CallOption) (*PredictBatchResponse, error)
+	// Control endpoint to reload a model or query status
+	ReloadModel(ctx context.Context, in *ReloadModelRequest, opts ...grpc.CallOption) (*ReloadModelResponse, error)
+	Status(ctx context.Context, in *StatusRequest, opts ...grpc.CallOption) (*StatusResponse, error)
+}
+
+type aIInferenceClient struct {
+	cc grpc.ClientConnInterface
+}
+
+func NewAIInferenceClient(cc grpc.ClientConnInterface) AIInferenceClient {
+	return &aIInferenceClient{cc}
+}
+
+func (c *aIInferenceClient) Predict(ctx context.Context, in *PredictRequest, opts ...grpc.CallOption) (*PredictResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(PredictResponse)
+	err := c.cc.Invoke(ctx, AIInference_Predict_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *aIInferenceClient) PredictBatch(ctx context.Context, in *PredictBatchRequest, opts ...grpc.CallOption) (*PredictBatchResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(PredictBatchResponse)
+	err := c.cc.Invoke(ctx, AIInference_PredictBatch_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *aIInferenceClient) ReloadModel(ctx context.Context, in *ReloadModelRequest, opts ...grpc.CallOption) (*ReloadModelResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(ReloadModelResponse)
+	err := c.cc.Invoke(ctx, AIInference_ReloadModel_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *aIInferenceClient) Status(ctx context.Context, in *StatusRequest, opts ...grpc.CallOption) (*StatusResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(StatusResponse)
+	err := c.cc.Invoke(ctx, AIInference_Status_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+// AIInferenceServer is the server API for AIInference service.
+// All implementations must embed UnimplementedAIInferenceServer
+// for forward compatibility.
+//
+// --- AI Service ---
+// Performs semantic and risk analysis on parsed code or reports
+type AIInferenceServer interface {
+	// Unary predict: single input -> single output
+	Predict(context.Context, *PredictRequest) (*PredictResponse, error)
+	// Batch predict
+	PredictBatch(context.Context, *PredictBatchRequest) (*PredictBatchResponse, error)
+	// Control endpoint to reload a model or query status
+	ReloadModel(context.Context, *ReloadModelRequest) (*ReloadModelResponse, error)
+	Status(context.Context, *StatusRequest) (*StatusResponse, error)
+	mustEmbedUnimplementedAIInferenceServer()
+}
+
+// UnimplementedAIInferenceServer must be embedded to have
+// forward compatible implementations.
+//
+// NOTE: this should be embedded by value instead of pointer to avoid a nil
+// pointer dereference when methods are called.
+type UnimplementedAIInferenceServer struct{}
+
+func (UnimplementedAIInferenceServer) Predict(context.Context, *PredictRequest) (*PredictResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method Predict not implemented")
+}
+func (UnimplementedAIInferenceServer) PredictBatch(context.Context, *PredictBatchRequest) (*PredictBatchResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method PredictBatch not implemented")
+}
+func (UnimplementedAIInferenceServer) ReloadModel(context.Context, *ReloadModelRequest) (*ReloadModelResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method ReloadModel not implemented")
+}
+func (UnimplementedAIInferenceServer) Status(context.Context, *StatusRequest) (*StatusResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method Status not implemented")
+}
+func (UnimplementedAIInferenceServer) mustEmbedUnimplementedAIInferenceServer() {}
+func (UnimplementedAIInferenceServer) testEmbeddedByValue()                     {}
+
+// UnsafeAIInferenceServer may be embedded to opt out of forward compatibility for this service.
+// Use of this interface is not recommended, as added methods to AIInferenceServer will
+// result in compilation errors.
+type UnsafeAIInferenceServer interface {
+	mustEmbedUnimplementedAIInferenceServer()
+}
+
+func RegisterAIInferenceServer(s grpc.ServiceRegistrar, srv AIInferenceServer) {
+	// If the following call pancis, it indicates UnimplementedAIInferenceServer was
+	// embedded by pointer and is nil.  This will cause panics if an
+	// unimplemented method is ever invoked, so we test this at initialization
+	// time to prevent it from happening at runtime later due to I/O.
+	if t, ok := srv.(interface{ testEmbeddedByValue() }); ok {
+		t.testEmbeddedByValue()
+	}
+	s.RegisterService(&AIInference_ServiceDesc, srv)
+}
+
+func _AIInference_Predict_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(PredictRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(AIInferenceServer).Predict(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: AIInference_Predict_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(AIInferenceServer).Predict(ctx, req.(*PredictRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _AIInference_PredictBatch_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(PredictBatchRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(AIInferenceServer).PredictBatch(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: AIInference_PredictBatch_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(AIInferenceServer).PredictBatch(ctx, req.(*PredictBatchRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _AIInference_ReloadModel_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ReloadModelRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(AIInferenceServer).ReloadModel(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: AIInference_ReloadModel_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(AIInferenceServer).ReloadModel(ctx, req.(*ReloadModelRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _AIInference_Status_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(StatusRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(AIInferenceServer).Status(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: AIInference_Status_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(AIInferenceServer).Status(ctx, req.(*StatusRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+// AIInference_ServiceDesc is the grpc.ServiceDesc for AIInference service.
+// It's only intended for direct use with grpc.RegisterService,
+// and not to be introspected or modified (even as a copy)
+var AIInference_ServiceDesc = grpc.ServiceDesc{
+	ServiceName: "pb.aipb.AIInference",
+	HandlerType: (*AIInferenceServer)(nil),
+	Methods: []grpc.MethodDesc{
+		{
+			MethodName: "Predict",
+			Handler:    _AIInference_Predict_Handler,
+		},
+		{
+			MethodName: "PredictBatch",
+			Handler:    _AIInference_PredictBatch_Handler,
+		},
+		{
+			MethodName: "ReloadModel",
+			Handler:    _AIInference_ReloadModel_Handler,
+		},
+		{
+			MethodName: "Status",
+			Handler:    _AIInference_Status_Handler,
+		},
+	},
+	Streams:  []grpc.StreamDesc{},
+	Metadata: "ai.proto",
+}
+
+const (
+	AIService_AnalyzeCode_FullMethodName = "/pb.aipb.AIService/AnalyzeCode"
+)
+
+// AIServiceClient is the client API for AIService service.
+//
+// For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type AIServiceClient interface {
 	AnalyzeCode(ctx context.Context, in *AIAnalyzeRequest, opts ...grpc.CallOption) (*AIAnalyzeResponse, error)
 }
@@ -53,9 +278,6 @@ func (c *aIServiceClient) AnalyzeCode(ctx context.Context, in *AIAnalyzeRequest,
 // AIServiceServer is the server API for AIService service.
 // All implementations must embed UnimplementedAIServiceServer
 // for forward compatibility.
-//
-// --- AI Service ---
-// Performs semantic and risk analysis on parsed code or reports
 type AIServiceServer interface {
 	AnalyzeCode(context.Context, *AIAnalyzeRequest) (*AIAnalyzeResponse, error)
 	mustEmbedUnimplementedAIServiceServer()
@@ -114,7 +336,7 @@ func _AIService_AnalyzeCode_Handler(srv interface{}, ctx context.Context, dec fu
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
 var AIService_ServiceDesc = grpc.ServiceDesc{
-	ServiceName: "aipb.AIService",
+	ServiceName: "pb.aipb.AIService",
 	HandlerType: (*AIServiceServer)(nil),
 	Methods: []grpc.MethodDesc{
 		{

@@ -1,6 +1,6 @@
 import re
 from typing import List
-from .types import Token
+from .schemas import Token
 
 class CodeTokenizer:
     """Tokenizer cơ bản cho mã nguồn Python."""

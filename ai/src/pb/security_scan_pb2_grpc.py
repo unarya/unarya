@@ -3,7 +3,7 @@
 import grpc
 import warnings
 
-import security_scan_pb2 as security__scan__pb2
+from . import security_scan_pb2 as security__scan__pb2
 
 GRPC_GENERATED_VERSION = '1.75.1'
 GRPC_VERSION = grpc.__version__

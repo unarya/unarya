@@ -55,15 +55,20 @@ echo -e "${GREEN}✓ Go plugins ready.${NC}"
 if command -v python3 &> /dev/null; then
     echo -e "${YELLOW}→ Checking Python environment...${NC}"
 
+    if ! dpkg -s python3-venv &> /dev/null || ! dpkg -s python3-pip &> /dev/null; then
+        echo "Installing missing Python packages (python3-venv, python3-pip, setuptools)..."
+        sudo apt-get update -y >/dev/null
+        sudo apt-get install -y python3-venv python3-pip python3-setuptools >/dev/null
+    fi
+
     if [ ! -d "$PY_ENV_DIR" ]; then
         echo "Creating virtual environment at $PY_ENV_DIR..."
         python3 -m venv "$PY_ENV_DIR"
     fi
 
-    # Activate venv
     source "$PY_ENV_DIR/bin/activate"
 
-    python3 -m ensurepip --upgrade >/dev/null 2>&1
+    python3 -m ensurepip --upgrade >/dev/null 2>&1 || true
 
     if ! python3 -m grpc_tools.protoc --version &> /dev/null; then
         echo "Installing grpcio + grpcio-tools into venv..."
@@ -107,13 +112,32 @@ echo -e "${GREEN}✓ Go proto files generated successfully.${NC}"
 if command -v python3 &> /dev/null; then
     echo -e "${YELLOW}→ Generating Python gRPC bindings...${NC}"
 
-    for file in "$PROTO_DIR"/*.proto; do
-        echo "   ↳ $(basename "$file")"
+    find "$PROTO_DIR" -name "*.proto" | while read -r file; do
+        rel_path="${file#$PROTO_DIR/}"
+        echo "   ↳ $rel_path"
+
+        out_dir="$PY_OUT_DIR/$(dirname "$rel_path")"
+        mkdir -p "$out_dir"
+
         python3 -m grpc_tools.protoc \
             -I"$PROTO_DIR" \
             --python_out="$PY_OUT_DIR" \
             --grpc_python_out="$PY_OUT_DIR" \
             "$file"
+    done
+
+    # === FIX PYTHON IMPORTS ===
+    echo -e "${YELLOW}→ Fixing Python imports for relative imports...${NC}"
+
+    find "$PY_OUT_DIR" -name "*_pb2*.py" | while read -r py_file; do
+        # Fix: import ai_pb2 → from . import ai_pb2
+        sed -i 's/^import \([a-zA-Z0-9_]*\)_pb2 as \([a-zA-Z0-9_]*\)__pb2$/from . import \1_pb2 as \2__pb2/g' "$py_file"
+    done
+
+    # === CREATE __init__.py FILES ===
+    echo -e "${YELLOW}→ Creating __init__.py files...${NC}"
+    find "$PY_OUT_DIR" -type d | while read -r dir; do
+        touch "$dir/__init__.py"
     done
 
     echo -e "${GREEN}✓ Python proto files generated successfully.${NC}"

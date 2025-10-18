@@ -1,6 +1,6 @@
 import random
 from typing import List
-from .types import Example
+from .schemas import Example
 
 class GenerativeTrainer:
     """Huấn luyện mô hình sinh mã (ví dụ Dockerfile hoặc YAML)."""

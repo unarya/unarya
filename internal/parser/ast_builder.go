@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"go/parser"
 	"go/token"
-	"os"
+	_ "os"
 	"path/filepath"
 )
 

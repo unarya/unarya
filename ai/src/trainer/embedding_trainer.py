@@ -1,6 +1,6 @@
 import numpy as np
 import os
-from .types import Dataset, Config
+from .schemas import Dataset, Config
 
 class EmbeddingTrainer:
     """Huấn luyện mô hình embedding cho mã nguồn."""
