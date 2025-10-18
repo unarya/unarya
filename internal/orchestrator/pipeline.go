@@ -1,7 +1,7 @@
 package orchestrator
 
 import (
-	"fmt"
+	_ "fmt"
 	"log"
 	"time"
 )

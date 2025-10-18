@@ -1,6 +1,6 @@
 import numpy as np
 from typing import List
-from .types import Token
+from .schemas import Token
 
 class CodeEncoder:
     """Chuyển danh sách token thành vector số."""

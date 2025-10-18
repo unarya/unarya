@@ -3,9 +3,10 @@ set -e
 set -o pipefail
 
 # ==============================================================================
-# UNIVIA - DEPLOY SCRIPT
+# UNARYA - DEPLOY SCRIPT
 # ------------------------------------------------------------------------------
-# Description : Build & launch Univia microservices (API, Signaling, Infra)
+# Description : Build & launch Unarya microservices (Collector, Orchestrator,
+#               Parser, Security Scan, AI Model, Infra)
 # Author      : Tiecont
 # Version     : 1.0
 # ==============================================================================
@@ -13,12 +14,17 @@ set -o pipefail
 # ==== Configuration ====
 ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 INFRA_DIR="$ROOT_DIR/infra"
-API_DIR="$ROOT_DIR/cmd/api"
-SIGNALING_DIR="$ROOT_DIR/cmd/signaling"
+COLLECTOR_DIR="$ROOT_DIR/cmd/collector"
+ORCHESTRATOR_DIR="$ROOT_DIR/cmd/orchestrator"
+PARSER_DIR="$ROOT_DIR/cmd/parser"
+SECURITY_SCAN_DIR="$ROOT_DIR/cmd/security_scan"
+AI_DIR="$ROOT_DIR/ai"
 
-MYSQL_IMAGE_TAG="univia:mysql"
-API_IMAGE_TAG="univia:dev"
-SIGNALING_IMAGE_TAG="univia-signaling:dev"
+COLLECTOR_IMAGE_TAG="unarya-collector:dev"
+ORCHESTRATOR_IMAGE_TAG="unarya-orchestrator:dev"
+PARSER_IMAGE_TAG="unarya-parser:dev"
+SECURITY_IMAGE_TAG="unarya-security_scan:dev"
+AI_IMAGE_TAG="unarya-ai:dev"
 
 # ==== Utilities ====
 log() {
@@ -31,54 +37,58 @@ error_exit() {
 }
 
 # ==== Preflight ====
-for dir in "$INFRA_DIR" "$API_DIR" "$SIGNALING_DIR"; do
+for dir in "$INFRA_DIR" "$COLLECTOR_DIR" "$ORCHESTRATOR_DIR" "$PARSER_DIR" "$SECURITY_SCAN_DIR" "$AI_DIR"; do
     [ -d "$dir" ] || error_exit "Missing directory: $dir"
 done
 
 cd "$ROOT_DIR"
 
-# ==== Steps ====
+# ----------------------------------------------------------------------
+# CLEANUP STAGE
+# ----------------------------------------------------------------------
+log "Stopping and cleaning up old containers..."
+cd "$INFRA_DIR" && docker compose down --remove-orphans || error_exit "Failed to stop old containers."
 
-log "Pulling MySQL base image..."
-docker pull mysql:latest || error_exit "Failed to pull MySQL image."
-docker tag mysql:latest "$MYSQL_IMAGE_TAG"
-
-log "Stopping old containers..."
-cd "$INFRA_DIR" && docker compose down || error_exit "Failed to stop old containers."
 # ----------------------------------------------------------------------
 # BUILD STAGE
 # ----------------------------------------------------------------------
-log "Building API (Gin) image from: $API_DIR"
-cd "$API_DIR"
-docker build \
-    --target=development \
-    -t "$API_IMAGE_TAG" \
-    --build-arg CACHEBUST=$(date +%s) \
-    . || error_exit "Failed to build API image."
+build_service() {
+    local name=$1
+    local dir=$2
+    local image=$3
+    log "Building $name image from: $dir"
+    cd "$dir"
+    docker build \
+        --target=development \
+        -t "$image" \
+        --build-arg CACHEBUST=$(date +%s) \
+        . || error_exit "Failed to build $name image."
+}
 
-log "Building Signaling (WebRTC) image from: $SIGNALING_DIR"
-cd "$SIGNALING_DIR"
-docker build \
-    --target=development \
-    -t "$SIGNALING_IMAGE_TAG" \
-    --build-arg CACHEBUST=$(date +%s) \
-    . || error_exit "Failed to build signaling image."
+build_service "Collector" "$COLLECTOR_DIR" "$COLLECTOR_IMAGE_TAG"
+build_service "Orchestrator" "$ORCHESTRATOR_DIR" "$ORCHESTRATOR_IMAGE_TAG"
+build_service "Parser" "$PARSER_DIR" "$PARSER_IMAGE_TAG"
+build_service "Security Scan" "$SECURITY_SCAN_DIR" "$SECURITY_IMAGE_TAG"
+build_service "AI Model" "$AI_DIR" "$AI_IMAGE_TAG"
 
 # ----------------------------------------------------------------------
 # DEPLOY STAGE
 # ----------------------------------------------------------------------
 log "Starting infrastructure stack..."
-cd "$INFRA_DIR" && docker compose --env-file ../configs/.env up -d || error_exit "Failed to start infra stack."
+cd "$INFRA_DIR"
+docker compose --env-file ../configs/.env up -d || error_exit "Failed to start infra stack."
 
 log "Listing running containers..."
 docker ps --format "table {{.Names}}\t{{.Status}}\t{{.Ports}}"
 
 echo ""
-echo "✅ Univia microservices are running successfully!"
+echo "✅ Unarya microservices are running successfully!"
 echo "------------------------------------------------"
-echo "  • API Image:         $API_IMAGE_TAG"
-echo "  • Signaling Image:   $SIGNALING_IMAGE_TAG"
-echo "  • Infra Compose:     $INFRA_DIR"
+echo "  • Collector Image:     $COLLECTOR_IMAGE_TAG"
+echo "  • Orchestrator Image:  $ORCHESTRATOR_IMAGE_TAG"
+echo "  • Parser Image:        $PARSER_IMAGE_TAG"
+echo "  • Security Scan Image: $SECURITY_IMAGE_TAG"
+echo "  • AI Model Image:      $AI_IMAGE_TAG"
+echo "  • Infra Compose:       $INFRA_DIR"
 echo "------------------------------------------------"
 echo ""
-

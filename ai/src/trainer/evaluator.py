@@ -1,5 +1,5 @@
 import numpy as np
-from .types import Dataset, EvalResult
+from .schemas import Dataset, EvalResult
 
 class Evaluator:
     """Đánh giá mô hình sau huấn luyện."""

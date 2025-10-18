@@ -1,5 +1,5 @@
 import yaml
-from .types import ValidationResult
+from .schemas import ValidationResult
 
 class Validator:
     """Kiểm tra tính hợp lệ của các file cấu hình sinh ra."""

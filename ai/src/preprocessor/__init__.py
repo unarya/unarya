@@ -4,7 +4,7 @@ from .tokenizer import CodeTokenizer
 from .encoder import CodeEncoder
 from .tree_encoder import TreeEncoder
 from .normalizer import Normalizer
-from .types import Token
+from .schemas import Token
 
 class CodePreprocessor:
     """Pipeline tiền xử lý mã nguồn."""

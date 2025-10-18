@@ -1,6 +1,6 @@
 from typing import List
 import yaml
-from .types import Service
+from .schemas import Service
 
 class ComposeGenerator:
     """Sinh file docker-compose.yml."""

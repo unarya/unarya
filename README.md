@@ -128,7 +128,7 @@ unarya/
 ### 1. Clone the Repository
 
 ```bash
-git clone https://github.com/yourusername/unarya.git
+git clone https://github.com/unarya/unarya.git
 cd unarya
 ```
 
@@ -182,13 +182,6 @@ make proto
 make run-local
 ```
 
-## Configuration
-
-Configuration files are located in the `configs/` directory:
-
-- `golang-service.yaml`: Golang service settings (ports, timeouts, security rules)
-- `python-service.yaml`: Python service settings (model paths, inference parameters)
-- `models.yaml`: AI model configurations
 
 ## API Usage
 

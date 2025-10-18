@@ -1,7 +1,7 @@
 import torch
 import torch.nn as nn
 import torch.optim as optim
-from .types import Dataset, Config
+from .schemas import Dataset, Config
 
 class SimpleTransformer(nn.Module):
     """Một transformer rất đơn giản cho minh họa."""
@@ -18,7 +18,7 @@ class SimpleTransformer(nn.Module):
         return self.fc(encoded)
 
 class TransformerTrainer:
-    """Huấn luyện mô hình hiểu mã (BERT-like hoặc GPT-like)."""
+    """Huấn luyện và export Transformer model (PyTorch → ONNX)."""
 
     def __init__(self):
         self.model = None
@@ -42,6 +42,49 @@ class TransformerTrainer:
                 total_loss += loss.item()
             print(f"Epoch {epoch+1}/{config.epochs}, Loss: {total_loss:.4f}")
 
-    def save_model(self, path: str):
-        torch.save(self.model.state_dict(), path)
-        print(f"[TransformerTrainer] Model saved to {path}")
+    def save_model(self, path: str, export_type: str = "onnx"):
+        """
+        Lưu model với định dạng mong muốn:
+        - 'onnx'  → Dành cho runtime Golang (khuyên dùng)
+        - 'torchscript-trace' → Dành cho inference Python/C++
+        - 'torchscript-script' → Dành cho mô hình có control flow phức tạp
+        - 'state_dict' → Dành cho nghiên cứu / fine-tune tiếp
+        """
+        self.model.eval()
+
+        # Dummy input cho export
+        dummy_input = torch.randint(0, 5000, (10, 1))
+
+        if export_type == "onnx":
+            export_path = f"{path}.onnx"
+            torch.onnx.export(
+                self.model,
+                dummy_input,
+                export_path,
+                input_names=["input_ids"],
+                output_names=["logits"],
+                opset_version=17,
+                dynamic_axes={"input_ids": {0: "batch"}, "logits": {0: "batch"}},
+            )
+            print(f"[TransformerTrainer] ✅ Model exported to ONNX: {export_path}")
+
+        elif export_type == "torchscript-trace":
+            export_path = f"{path}_trace.pt"
+            traced = torch.jit.trace(self.model, dummy_input)
+            traced.save(export_path)
+            print(f"[TransformerTrainer] ✅ TorchScript (trace) saved: {export_path}")
+
+        elif export_type == "torchscript-script":
+            export_path = f"{path}_script.pt"
+            scripted = torch.jit.script(self.model)
+            scripted.save(export_path)
+            print(f"[TransformerTrainer] ✅ TorchScript (script) saved: {export_path}")
+
+        elif export_type == "state_dict":
+            export_path = f"{path}.pth"
+            torch.save(self.model.state_dict(), export_path)
+            print(f"[TransformerTrainer] ✅ State dict saved: {export_path}")
+
+        else:
+            raise ValueError(f"Unknown export_type: {export_type}")
+

@@ -1,5 +1,5 @@
 import yaml
-from .types import AppConfig
+from .schemas import AppConfig
 
 class K8sGenerator:
     """Sinh manifest Kubernetes: Deployment, Service, Ingress."""
