@@ -20,6 +20,7 @@ WORKDIR /build
 # Copy dependency files first for better caching
 COPY go.mod go.sum ./
 COPY main.go ./
+
 # Download dependencies
 RUN go mod download && go mod verify
 
@@ -58,10 +59,10 @@ FROM gcr.io/distroless/base-debian12:nonroot AS production
 COPY --from=builder /etc/ssl/certs/ca-certificates.crt /etc/ssl/certs/
 COPY --from=builder /usr/share/zoneinfo /usr/share/zoneinfo
 
-# Copy binary và set quyền thực thi
+# Copy binary and setting permissions
 COPY --chmod=755 --from=builder /build/app /app
 
-# Copy libwebp và dependency liên quan
+# Copy libwebp và necessary dependencies
 COPY --from=builder /usr/lib/libwebp.so* /usr/lib/
 COPY --from=builder /lib/x86_64-linux-gnu/libjpeg.so* /lib/x86_64-linux-gnu/
 COPY --from=builder /lib/x86_64-linux-gnu/libpng*.so* /lib/x86_64-linux-gnu/

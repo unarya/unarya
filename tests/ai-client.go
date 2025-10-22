@@ -12,12 +12,11 @@ import (
 )
 
 func main() {
-	// Kết nối tới server Python (không mã hóa TLS, dùng insecure)
 	conn, err := grpc.NewClient("localhost:6000",
 		grpc.WithTransportCredentials(insecure.NewCredentials()),
 	)
 	if err != nil {
-		log.Fatalf("❌ Không thể kết nối gRPC server: %v", err)
+		log.Fatalf("❌ Cannot connect to ML service: %v", err)
 	}
 	defer conn.Close()
 
@@ -33,10 +32,10 @@ func main() {
 
 	res, err := client.AnalyzeCode(ctx, req)
 	if err != nil {
-		log.Fatalf("❌ RPC lỗi: %v", err)
+		log.Fatalf("❌ ML model error: %v", err)
 	}
 
-	fmt.Println("✅ gRPC response:")
+	fmt.Println("✅ ML model response:")
 	fmt.Printf("  → insights: %s\n", res.GetInsights())
 	fmt.Printf("  → confidence: %s\n", res.GetConfidence())
 }
