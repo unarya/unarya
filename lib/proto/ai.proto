@@ -4,76 +4,83 @@ package pb.aipb;
 
 option go_package = "github.com/unarya/unarya/lib/proto/pb/aipb";
 
-// --- AI Service ---
-// Performs semantic and risk analysis on parsed code or reports
+// ============================================================
+// AIInference Service
+// ============================================================
+// This service handles AI model inference, including single predictions,
+// batch predictions, model reloading, and runtime status checks.
 service AIInference {
-  // Unary predict: single input -> single output
+  // Perform a single prediction (one input → one output)
   rpc Predict(PredictRequest) returns (PredictResponse) {}
 
-
-  // Batch predict
+  // Perform multiple predictions in a batch
   rpc PredictBatch(PredictBatchRequest) returns (PredictBatchResponse) {}
 
-
-  // Control endpoint to reload a model or query status
+  // Reload or switch to a new model version
   rpc ReloadModel(ReloadModelRequest) returns (ReloadModelResponse) {}
+
+  // Query the current model status
   rpc Status(StatusRequest) returns (StatusResponse) {}
 }
 
+// ----------------------
+// Messages for AIInference
+// ----------------------
 
 message PredictRequest {
-  bytes input = 1; // opaque input, typically serialized tensor(s)
-  string model = 2; // optional model name/version
+  bytes input = 1;   // Serialized tensor or model input
+  string model = 2;  // Optional model name or version
 }
-
 
 message PredictResponse {
-  bytes output = 1; // opaque output, typically serialized tensor(s)
+  bytes output = 1;  // Serialized tensor or model output
 }
 
-
 message PredictBatchRequest {
-  repeated bytes inputs = 1;
+  repeated bytes inputs = 1; // Multiple serialized inputs
   string model = 2;
 }
 
-service AIService {
-  rpc AnalyzeCode(AIAnalyzeRequest) returns (AIAnalyzeResponse);
-}
-
-message AIAnalyzeRequest {
-  string language = 1;
-  string code_structure = 2;
-}
-
-message AIAnalyzeResponse {
-  string insights = 1; // e.g., "Detected MVC pattern", "Possible logic flaw"
-  string confidence = 2;
-}
-
-
-
 message PredictBatchResponse {
-  repeated bytes outputs = 1;
+  repeated bytes outputs = 1; // Multiple serialized outputs
 }
-
 
 message ReloadModelRequest {
-  string model_path = 1; // path or object store URI
+  string model_path = 1; // Path or object store URI to model file
 }
-
 
 message ReloadModelResponse {
   bool ok = 1;
   string message = 2;
 }
 
-
 message StatusRequest {}
-
 
 message StatusResponse {
   string model = 1;
   string version = 2;
-  string state = 3; // e.g., "loaded", "error", "no_model"
+  string state = 3; // e.g. "loaded", "error", "no_model"
+}
+
+// ============================================================
+// AIService
+// ============================================================
+// This service provides higher-level AI operations such as
+// semantic or structural analysis of source code.
+service AIService {
+  rpc AnalyzeCode(AIAnalyzeRequest) returns (AIAnalyzeResponse);
+}
+
+// ----------------------
+// Messages for AIService
+// ----------------------
+
+message AIAnalyzeRequest {
+  string language = 1;        // Programming language (e.g. "Python", "Go")
+  string code_structure = 2;  // Code structure, AST, or intermediate representation
+}
+
+message AIAnalyzeResponse {
+  string insights = 1;   // Example: "Detected MVC pattern", "Possible logic flaw"
+  string confidence = 2; // Confidence level or score
 }
