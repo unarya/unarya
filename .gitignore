@@ -1,6 +1,3 @@
+configs/.env
+ai/.venv
 .idea
-api/.idea
-api/bin
-api/packages
-engine/.idea
-engine/bin

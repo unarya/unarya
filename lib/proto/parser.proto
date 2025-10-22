@@ -1,0 +1,25 @@
+syntax = "proto3";
+
+package parserpb;
+
+option go_package = "github.com/unarya/unarya/lib/proto/pb/parserpb";
+
+// --- Parser Service ---
+// Responsible for code parsing, AST generation, and dependency extraction
+service ParserService {
+  // Parse a given source directory and produce structured metadata
+  rpc ParseCode(ParseRequest) returns (ParseResponse);
+}
+
+// --- Messages ---
+
+message ParseRequest {
+  string source_path = 1;
+}
+
+message ParseResponse {
+  string language = 1;            // Detected primary language
+  repeated string dependencies = 2; // List of dependency files and data
+  string code_structure = 3;      // Tree-like or JSON structure
+  string representation = 4;      // e.g., "json", "tree"
+}

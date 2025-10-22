@@ -1,0 +1,20 @@
+syntax = "proto3";
+
+package orchestratorpb;
+
+option go_package = "github.com/unarya/unarya/lib/proto/pb/orchestratorpb";
+
+// --- Orchestrator Service ---
+// Coordinates execution between Collector, Parser, SecurityScan, and AI
+service OrchestratorService {
+  rpc StartPipeline(PipelineRequest) returns (PipelineResponse);
+}
+
+message PipelineRequest {
+  string repository_url = 1;
+}
+
+message PipelineResponse {
+  string status = 1;
+  string details = 2;
+}
