@@ -1,0 +1,51 @@
+syntax = "proto3";
+
+package collectorpb;
+
+option go_package = "github.com/unarya/unarya/lib/proto/pb/collectorpb";
+
+// --- Collector Service ---
+// Responsible for fetching, cloning, and validating source code repositories
+service CollectorService {
+  // Clone repository from Git (GitHub, GitLab, Bitbucket)
+  rpc CollectFromGit(GitRequest) returns (CollectorResponse);
+
+  // Download and extract ZIP/TAR archives
+  rpc CollectFromArchive(ArchiveRequest) returns (CollectorResponse);
+
+  // Download files from HTTP/HTTPS
+  rpc CollectFromURL(URLRequest) returns (CollectorResponse);
+
+  // Validate incoming source URL
+  rpc ValidateSource(ValidateRequest) returns (ValidateResponse);
+}
+
+// --- Messages ---
+
+message GitRequest {
+  string url = 1;
+  string branch = 2;
+  string token = 3;
+}
+
+message ArchiveRequest {
+  string url = 1;
+}
+
+message URLRequest {
+  string url = 1;
+}
+
+message ValidateRequest {
+  string url = 1;
+}
+
+message ValidateResponse {
+  bool valid = 1;
+  string message = 2;
+}
+
+message CollectorResponse {
+  string message = 1;
+  string path = 2;
+}

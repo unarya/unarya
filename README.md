@@ -1,219 +1,274 @@
-# 🚀 Univia & Unarya
+# Unarya
 
-> **Intelligent Developer Hub powered by AI-driven Infrastructure Engine**
+An intelligent code analysis and deployment automation platform that combines static analysis, security scanning, and AI-powered infrastructure generation.
 
-[![MIT License](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
-[![Go Version](https://img.shields.io/badge/Go-1.21+-00ADD8?logo=go)](https://go.dev/)
-[![AI Powered](https://img.shields.io/badge/AI-Powered-blueviolet?logo=openai)](https://github.com)
-[![Docker](https://img.shields.io/badge/Docker-Ready-2496ED?logo=docker)](https://www.docker.com/)
+## Overview
 
-## 📖 Overview
+Unarya is a dual-service architecture that processes source code through a comprehensive pipeline:
+- **Golang Service**: Handles code collection, parsing, security scanning, and orchestration
+- **Python Service**: Performs AI-based preprocessing, classification, model training, and synthesis of deployment artifacts
 
-**Univia & Unarya** is a next-generation developer platform that combines intelligent code analysis with automated infrastructure generation. The system consists of two core components:
-
-- **🧩 Univia** - Developer Hub & Orchestration Platform
-- **🧠 Unarya** - AI Engine for Code Understanding & Infrastructure Generation
-
-### 🎯 Key Features
-
-✅ **Intelligent Code Analysis** - Automatically detect languages, frameworks, and dependencies  
-✅ **AI-Powered Dockerfile Generation** - Create optimized Docker configurations  
-✅ **CI/CD Automation** - Generate pipeline configurations for GitHub Actions, GitLab CI  
-✅ **Real-time Collaboration** - Built-in voice chat and meeting capabilities  
-✅ **Team Management** - Advanced RBAC and organization controls  
-✅ **GitHub Integration** - Seamless repo import and webhook synchronization  
-
----
-
-## 🏗️ Architecture
+## Architecture
 
 ```
-                ┌──────────────────────────────┐
-                │       Frontend (UI)          │
-                │     React / Next.js          │
-                └──────────────┬───────────────┘
-                               │
-                               ▼
-                     ┌─────────────────┐
-                     │   Univia API    │
-                     │   (Go + Gin)    │
-                     └────────┬────────┘
-                              │
-      ┌───────────────────────┼───────────────────────┐
-      │                       │                       │
-      ▼                       ▼                       ▼
-┌───────────┐         ┌──────────────┐        ┌────────────────┐
-│Auth/User  │         │Team Service  │        │Meeting Service │
-│(JWT+Redis)│         │(RBAC, Org)   │        │(WebRTC Signal) │
-└───────────┘         └──────────────┘        └────────────────┘
-                              │
-                              ▼
-                    ┌────────────────┐
-                    │ GitHub Import  │──→ Repo Metadata
-                    │ Webhook Sync   │──→ Commit History
-                    └────────────────┘
-                              │
-                              ▼
-                  ┌────────────────────┐
-                  │ CI/CD Orchestrator │──→ Build Queue
-                  │  (Univia Runner)   │──→ Docker Build
-                  └────────┬───────────┘
-                           │
-                           ▼
-                  ┌────────────────────┐
-                  │   Unarya Engine    │
-                  │   (AI + Parser)    │
-                  └────────────────────┘
-                           │
-                           ▼
-                 ┌───────────────────────┐
-                 │   uryad Core Engine   │
-                 │  - Code Classifier    │
-                 │  - Docker Synthesizer │
-                 │  - CMD Predictor      │
-                 └───────────────────────┘
+┌─────────────────────────────────────────────────────────────┐
+│                     Golang Service                          │
+│  ┌──────────┐  ┌─────────┐  ┌─────────────────┐           │
+│  │Collector │→ │ Parser  │→ │ Security Scan   │→          │
+│  └──────────┘  └─────────┘  └─────────────────┘           │
+│         ↓                                                   │
+│  ┌──────────────────────────────────────────────┐          │
+│  │           Orchestrator (gRPC)                │          │
+│  └──────────────────────────────────────────────┘          │
+└────────────────────────┬────────────────────────────────────┘
+                         │ gRPC Protocol Buffers
+                         ↓
+┌─────────────────────────────────────────────────────────────┐
+│                     Python Service                          │
+│  ┌──────────────┐  ┌────────────┐  ┌──────────┐           │
+│  │Preprocessor  │→ │Classifier  │→ │ Trainer  │→          │
+│  └──────────────┘  └────────────┘  └──────────┘           │
+│                                           ↓                 │
+│  ┌──────────────┐  ┌────────────────────────────┐          │
+│  │Model Server  │← │     Synthesizer            │          │
+│  └──────────────┘  └────────────────────────────┘          │
+│         (Generates: Dockerfile, Compose, K8s YAML)          │
+└─────────────────────────────────────────────────────────────┘
 ```
 
----
+## Project Structure
 
-## 🧩 Component Overview
+```
+unarya/
+├── cmd/                          # Golang service entrypoints
+│   ├── orchestrator/             # Main pipeline orchestrator
+│   ├── collector/                # Source code collection service
+│   ├── parser/                   # Code parsing & AST analysis
+│   └── security_scan/            # Security vulnerability scanner
+│
+├── internal/                     # Golang internal packages
+│   ├── collector/                # Repository & source fetching logic
+│   ├── parser/                   # Code structure analysis
+│   ├── security_scan/            # Static analysis & vulnerability checks
+│   ├── orchestrator/             # gRPC request coordination
+│   └── shared/                   # Common utilities
+│       ├── logging/              # Structured logging
+│       ├── config/               # Configuration management
+│       ├── grpc/                 # gRPC client stubs
+│       └── auth/                 # Authentication utilities
+│
+├── ai/                           # Python service
+│   ├── src/
+│   │   ├── preprocessor/         # Data transformation & tokenization
+│   │   ├── classifier/           # Language & framework detection
+│   │   ├── trainer/              # Model training pipeline
+│   │   ├── synthesizer/          # Deployment artifact generation
+│   │   └── modelserver/          # Inference API server
+│   ├── proto/                    # Python gRPC stubs
+│   ├── requirements.txt
+│   └── Dockerfile
+│
+├── lib/                          # Shared protocol definitions
+│   └── proto/                    # gRPC protocol buffers
+│       └── pipeline.proto        # Service contract definitions
+│
+├── configs/                      # Configuration files
+│   ├── golang-service.yaml
+│   ├── python-service.yaml
+│   └── models.yaml
+│
+├── infra/                        # Infrastructure & deployment
+│   ├── docker-compose.yml        # Local development setup
+│   └── k8s/                      # Kubernetes manifests
+│       ├── golang-deployment.yaml
+│       ├── python-deployment.yaml
+│       ├── grpc-gateway.yaml
+│       └── secrets.yaml
+│
+├── scripts/                      # Automation scripts
+│   ├── gen-proto.sh              # Protocol buffer compilation
+│   ├── run-local.sh              # Local development launcher
+│   └── benchmark.sh              # Performance testing
+│
+├── docs/                         # Documentation
+│   ├── architecture.md           # System design & data flow
+│   ├── model-structure.md        # AI model specifications
+│   └── grpc-contract.md          # API definitions
+│
+├── Makefile                      # Build automation
+├── LICENSE
+└── README.md
+```
 
-### 1. **Univia** (Developer Hub)
+## Features
 
-**Purpose:** Manage user lifecycle, teams, projects, and CI/CD integration.
+### Golang Service
+- **Code Collection**: Fetch source code from repositories, archives, or URLs
+- **AST Parsing**: Analyze code structure, dependencies, and language detection
+- **Security Scanning**: Static analysis, secret detection, permission checks, dependency vulnerabilities
+- **Orchestration**: Coordinate pipeline stages via gRPC
 
-**Core Features:**
+### Python Service
+- **Preprocessing**: Transform code into numerical matrices, tokenization, tree encoding
+- **Classification**: Detect programming languages, frameworks, and coding styles
+- **Model Training**: Train embeddings, transformers, and generative models
+- **Synthesis**: Generate deployment artifacts (Dockerfiles, Docker Compose, Kubernetes YAML)
+- **Model Server**: Inference API for real-time generation
 
-| Feature | Description |
-|---------|-------------|
-| 👤 **User Authentication** | Email, OAuth (GitHub, Google, etc.) |
-| 👥 **Team Management** | Create teams, role-based permissions, repo sharing |
-| 🐙 **GitHub Integration** | Import repositories, webhook events |
-| 🧠 **Project Lifecycle** | Build pipelines, CI/CD triggers, version history |
-| 📞 **Real-time Collaboration** | Voice chat, meetings, WebRTC signaling |
-| 🚀 **Deployment Integration** | Trigger Docker builds, push, and deploy |
-
-**Result:** Univia serves as the **frontend orchestration platform** where all user actions flow through and synchronize with Unarya.
-
----
-
-### 2. **Unarya** (AI Engine Hub)
-
-**Purpose:** Provide intelligence to Univia - "understand code, generate Dockerfiles, predict runtime environments."
-
-**Core Features:**
-
-| Feature | Description |
-|---------|-------------|
-| 🧬 **Source Code Understanding** | Classify projects (Go, Node, Python, Java, React, etc.) |
-| 📦 **Dependency Extraction** | Parse package.json, go.mod, requirements.txt |
-| 🧠 **AI Model Engine (uryad)** | Generate Dockerfile, .dockerignore, docker-compose.yaml |
-| ⚙️ **Engine Registry** | Language-specific engines (GoEngine, NodeEngine, etc.) |
-| 🔄 **Runtime Adapter** | Bi-directional communication with Univia via gRPC/WebSocket |
-
-**Result:** Unarya is the **brain** - it reads, understands code structure, and generates runtime environments and build logic for Univia.
-
----
-
-## ⚙️ Unarya Engine Components
-
-| # | Engine | Role | Technology Stack |
-|---|--------|------|------------------|
-| 1️⃣ | **Code Classification** | Identify language & framework from source | Tree-sitter AST + Fine-tuned Transformer |
-| 2️⃣ | **Dependency Extraction** | Analyze config files (go.mod, package.json, etc.) | Rule-based parser + Static analysis |
-| 3️⃣ | **Docker Synthesizer** | Generate optimized Dockerfiles (multi-stage builds) | CodeLlama, Phi-3, StarCoder2 |
-| 4️⃣ | **Environment Predictor** | Predict CMD, ENV variables needed to run app | Language-specific heuristics + Embeddings |
-| 5️⃣ | **CI/CD Generator** | Generate `.github/workflows` or `.gitlab-ci.yml` | Template engine + LLM-guided |
-| 6️⃣ | **Security Scanner** | Detect vulnerabilities, outdated packages | Snyk-like engine + Custom vulnerability DB |
-| 7️⃣ | **uryad Runtime Adapter** | Bridge between Univia and engines | gRPC microservice + Redis cache + Kafka queue |
-
----
-
-## 🚀 Quick Start
-
-### Prerequisites
+## Prerequisites
 
 - **Go** 1.21+
-- **Docker** & Docker Compose
-- **Node.js** 18+ (for frontend)
-- **Redis** (for caching)
-- **PostgreSQL** (for data storage)
+- **Python** 3.11+
+- **Protocol Buffers** compiler (protoc)
+- **Docker** & **Docker Compose** (for containerized deployment)
+- **Make** (optional, for build automation)
 
-### Installation
+## Quick Start
 
-```bash
-# Clone the repository
-git clone https://github.com/your-org/univia-unarya.git
-cd univia-unarya
-
-# Start services with Docker Compose
-docker-compose up -d
-
-# Install Univia dependencies
-cd univia
-go mod download
-
-# Install Unarya dependencies
-cd ../unarya
-go mod download
-
-# Run Univia API
-cd ../univia
-go run cmd/api/main.go
-
-# Run Unarya Engine
-cd ../unarya
-go run cmd/engine/main.go
-```
-
-### Frontend Setup
+### 1. Clone the Repository
 
 ```bash
-cd frontend
-npm install
-npm run dev
+git clone https://github.com/unarya/unarya.git
+cd unarya
 ```
 
-Access the application at `http://localhost:3000`
+### 2. Generate Protocol Buffers
 
----
-
-## 🛠️ Development
-
-### Project Structure
-
-```
-.
-├── univia/                 # Developer Hub (Orchestration)
-│   ├── cmd/               # Entry points
-│   ├── internal/          # Core business logic
-│   │   ├── auth/         # Authentication service
-│   │   ├── team/         # Team management
-│   │   ├── github/       # GitHub integration
-│   │   ├── cicd/         # CI/CD orchestrator
-│   │   └── meeting/      # WebRTC signaling
-│   └── pkg/              # Shared packages
-│
-├── unarya/                # AI Engine Hub
-│   ├── cmd/              # Entry points
-│   ├── internal/         # Core AI engines
-│   │   ├── classifier/   # Code classification
-│   │   ├── parser/       # Dependency extraction
-│   │   ├── synthesizer/  # Docker generation
-│   │   ├── predictor/    # Environment prediction
-│   │   └── scanner/      # Security scanning
-│   └── pkg/              # Shared packages
-│
-├── frontend/             # React/Next.js UI
-├── docker-compose.yml    # Development environment
-└── README.md            # This file
+```bash
+./scripts/gen-proto.sh
 ```
 
----
+This compiles `.proto` files for both Go and Python services.
 
-## 🤝 Contributing
+### 3. Install Dependencies
 
-We welcome contributions! Please follow these steps:
+**Golang Service:**
+```bash
+cd cmd
+go mod download
+```
+
+**Python Service:**
+```bash
+cd ai
+pip install -r requirements.txt
+```
+
+### 4. Run Locally
+
+Using the provided script:
+```bash
+./scripts/run-local.sh
+```
+
+Or using Docker Compose:
+```bash
+docker-compose -f infra/docker-compose.yml up --build
+```
+
+### 5. Using Make
+
+```bash
+# Build all services
+make build
+
+# Run tests
+make test
+
+# Generate proto files
+make proto
+
+# Run locally
+make run-local
+```
+
+
+## API Usage
+
+### Submit Code Analysis Request
+
+```bash
+curl -X POST http://localhost:8080/api/v1/analyze \
+  -H "Content-Type: application/json" \
+  -d '{
+    "repo_url": "https://github.com/user/repo",
+    "branch": "main",
+    "output_format": "docker-compose"
+  }'
+```
+
+### Get Analysis Results
+
+```bash
+curl http://localhost:8080/api/v1/results/{job_id}
+```
+
+## Development
+
+### Adding a New Analysis Module
+
+1. Define the service in `lib/proto/pipeline.proto`
+2. Regenerate stubs: `./scripts/gen-proto.sh`
+3. Implement in `internal/` (Go) or `ai/src/` (Python)
+4. Update orchestrator to include the new stage
+
+### Running Tests
+
+```bash
+# Golang tests
+make test-go
+
+# Python tests
+make test-python
+
+# Integration tests
+make test-integration
+```
+
+### Benchmarking
+
+```bash
+./scripts/benchmark.sh
+```
+
+Tests throughput and latency under various loads.
+
+## Deployment
+
+### Docker Compose (Development)
+
+```bash
+docker-compose -f infra/docker-compose.yml up
+```
+
+### Kubernetes (Production)
+
+```bash
+kubectl apply -f infra/k8s/
+```
+
+This deploys:
+- Golang service pods
+- Python service pods
+- gRPC gateway
+- Required secrets and config maps
+
+## Documentation
+
+- [Architecture Overview](docs/architecture.md) - System design and data flow
+- [Model Structure](docs/model-structure.md) - AI model input/output specifications
+- [gRPC Contract](docs/grpc-contract.md) - Detailed API definitions
+
+## Performance
+
+- **Throughput**: ~1000 requests/minute (varies by code complexity)
+- **Latency**:
+    - Code parsing: ~200ms
+    - Security scan: ~500ms
+    - AI inference: ~2-5s
+    - End-to-end: ~5-10s
+
+## Contributing
 
 1. Fork the repository
 2. Create a feature branch (`git checkout -b feature/amazing-feature`)
@@ -221,41 +276,14 @@ We welcome contributions! Please follow these steps:
 4. Push to the branch (`git push origin feature/amazing-feature`)
 5. Open a Pull Request
 
-### Code Standards
+## License
 
-- Follow Go best practices and `gofmt` formatting
-- Write unit tests for new features
-- Update documentation for API changes
-- Use conventional commits
+This project is licensed under the terms specified in the [LICENSE](LICENSE) file.
 
----
+## Support
 
-## 🌟 Roadmap
-
-- [x] Core Univia API
-- [x] GitHub Integration
-- [x] Basic AI Engine (Code Classification)
-- [ ] Advanced Docker Synthesizer with LLM
-- [ ] Security Vulnerability Scanner
-- [ ] Kubernetes Deployment Support
-- [ ] Multi-cloud Provider Integration
-- [ ] Plugin System for Custom Engines
+For issues, questions, or contributions, please open an issue on GitHub or contact the maintainers.
 
 ---
 
-## 📞 Contact & Support
-
-- **Documentation:** [docs.univia.dev](https://docs.univia.dev)
-- **Issues:** [GitHub Issues](https://github.com/your-org/univia-unarya/issues)
-- **Discussions:** [GitHub Discussions](https://github.com/your-org/univia-unarya/discussions)
-- **Email:** support@univia.dev
-
----
-
-<div align="center">
-
-**Made with ❤️ by the Univia & Unarya Team**
-
-⭐ Star us on GitHub — it helps!
-
-</div>
+**Built with ❤️ using Go, Python, gRPC, and AI**
