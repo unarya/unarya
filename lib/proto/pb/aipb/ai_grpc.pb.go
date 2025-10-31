@@ -29,15 +29,19 @@ const (
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 //
-// --- AI Service ---
-// Performs semantic and risk analysis on parsed code or reports
+// ============================================================
+// AIInference Service
+// ============================================================
+// This service handles AI model inference, including single predictions,
+// batch predictions, model reloading, and runtime status checks.
 type AIInferenceClient interface {
-	// Unary predict: single input -> single output
+	// Perform a single prediction (one input → one output)
 	Predict(ctx context.Context, in *PredictRequest, opts ...grpc.CallOption) (*PredictResponse, error)
-	// Batch predict
+	// Perform multiple predictions in a batch
 	PredictBatch(ctx context.Context, in *PredictBatchRequest, opts ...grpc.CallOption) (*PredictBatchResponse, error)
-	// Control endpoint to reload a model or query status
+	// Reload or switch to a new model version
 	ReloadModel(ctx context.Context, in *ReloadModelRequest, opts ...grpc.CallOption) (*ReloadModelResponse, error)
+	// Query the current model status
 	Status(ctx context.Context, in *StatusRequest, opts ...grpc.CallOption) (*StatusResponse, error)
 }
 
@@ -93,15 +97,19 @@ func (c *aIInferenceClient) Status(ctx context.Context, in *StatusRequest, opts 
 // All implementations must embed UnimplementedAIInferenceServer
 // for forward compatibility.
 //
-// --- AI Service ---
-// Performs semantic and risk analysis on parsed code or reports
+// ============================================================
+// AIInference Service
+// ============================================================
+// This service handles AI model inference, including single predictions,
+// batch predictions, model reloading, and runtime status checks.
 type AIInferenceServer interface {
-	// Unary predict: single input -> single output
+	// Perform a single prediction (one input → one output)
 	Predict(context.Context, *PredictRequest) (*PredictResponse, error)
-	// Batch predict
+	// Perform multiple predictions in a batch
 	PredictBatch(context.Context, *PredictBatchRequest) (*PredictBatchResponse, error)
-	// Control endpoint to reload a model or query status
+	// Reload or switch to a new model version
 	ReloadModel(context.Context, *ReloadModelRequest) (*ReloadModelResponse, error)
+	// Query the current model status
 	Status(context.Context, *StatusRequest) (*StatusResponse, error)
 	mustEmbedUnimplementedAIInferenceServer()
 }
@@ -253,6 +261,12 @@ const (
 // AIServiceClient is the client API for AIService service.
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
+//
+// ============================================================
+// AIService
+// ============================================================
+// This service provides higher-level AI operations such as
+// semantic or structural analysis of source code.
 type AIServiceClient interface {
 	AnalyzeCode(ctx context.Context, in *AIAnalyzeRequest, opts ...grpc.CallOption) (*AIAnalyzeResponse, error)
 }
@@ -278,6 +292,12 @@ func (c *aIServiceClient) AnalyzeCode(ctx context.Context, in *AIAnalyzeRequest,
 // AIServiceServer is the server API for AIService service.
 // All implementations must embed UnimplementedAIServiceServer
 // for forward compatibility.
+//
+// ============================================================
+// AIService
+// ============================================================
+// This service provides higher-level AI operations such as
+// semantic or structural analysis of source code.
 type AIServiceServer interface {
 	AnalyzeCode(context.Context, *AIAnalyzeRequest) (*AIAnalyzeResponse, error)
 	mustEmbedUnimplementedAIServiceServer()
