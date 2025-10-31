@@ -19,7 +19,7 @@ ORCHESTRATOR_DIR="$ROOT_DIR/cmd/orchestrator"
 PARSER_DIR="$ROOT_DIR/cmd/parser"
 SECURITY_SCAN_DIR="$ROOT_DIR/cmd/security_scan"
 AI_DIR="$ROOT_DIR/ai"
-
+ENV_DIR="$ROOT_DIR/configs/.env"
 COLLECTOR_IMAGE_TAG="unarya-collector:dev"
 ORCHESTRATOR_IMAGE_TAG="unarya-orchestrator:dev"
 PARSER_IMAGE_TAG="unarya-parser:dev"
@@ -41,13 +41,25 @@ for dir in "$INFRA_DIR" "$COLLECTOR_DIR" "$ORCHESTRATOR_DIR" "$PARSER_DIR" "$SEC
     [ -d "$dir" ] || error_exit "Missing directory: $dir"
 done
 
+
+if [ ! -f "$ENV_DIR" ]; then
+  echo "Warning: $ENV_DIR not found. Using defaults from compose."
+else
+  echo "Found environment file: $ENV_DIR"
+fi
+
+# Load env vars for the execution
+if [ -f "$ENV_DIR" ]; then
+  source "$ENV_DIR" 2>/dev/null || true
+fi
+
 cd "$ROOT_DIR"
 
 # ----------------------------------------------------------------------
 # CLEANUP STAGE
 # ----------------------------------------------------------------------
 log "Stopping and cleaning up old containers..."
-cd "$INFRA_DIR" && docker compose down --remove-orphans || error_exit "Failed to stop old containers."
+cd "$INFRA_DIR" && docker compose --env-file="$ENV_DIR" down --remove-orphans || error_exit "Failed to stop old containers."
 
 # ----------------------------------------------------------------------
 # BUILD STAGE
@@ -76,10 +88,10 @@ build_service "AI Model" "$AI_DIR" "$AI_IMAGE_TAG"
 # ----------------------------------------------------------------------
 log "Starting infrastructure stack..."
 cd "$INFRA_DIR"
-docker compose --env-file ../configs/.env up -d || error_exit "Failed to start infra stack."
+docker compose --env-file "$ENV_DIR" up -d || error_exit "Failed to start infra stack."
 
 log "Listing running containers..."
-docker ps --format "table {{.Names}}\t{{.Status}}\t{{.Ports}}"
+docker ps --filter "name=unarya-" --format "table {{.Names}}\t{{.Status}}\t{{.Ports}}"
 
 echo ""
 echo "✅ Unarya microservices are running successfully!"
