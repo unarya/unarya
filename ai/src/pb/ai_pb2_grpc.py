@@ -26,8 +26,11 @@ if _version_not_supported:
 
 
 class AIInferenceStub(object):
-    """--- AI Service ---
-    Performs semantic and risk analysis on parsed code or reports
+    """============================================================
+    AIInference Service
+    ============================================================
+    This service handles AI model inference, including single predictions,
+    batch predictions, model reloading, and runtime status checks.
     """
 
     def __init__(self, channel):
@@ -59,33 +62,37 @@ class AIInferenceStub(object):
 
 
 class AIInferenceServicer(object):
-    """--- AI Service ---
-    Performs semantic and risk analysis on parsed code or reports
+    """============================================================
+    AIInference Service
+    ============================================================
+    This service handles AI model inference, including single predictions,
+    batch predictions, model reloading, and runtime status checks.
     """
 
     def Predict(self, request, context):
-        """Unary predict: single input -> single output
+        """Perform a single prediction (one input → one output)
         """
         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
         context.set_details('Method not implemented!')
         raise NotImplementedError('Method not implemented!')
 
     def PredictBatch(self, request, context):
-        """Batch predict
+        """Perform multiple predictions in a batch
         """
         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
         context.set_details('Method not implemented!')
         raise NotImplementedError('Method not implemented!')
 
     def ReloadModel(self, request, context):
-        """Control endpoint to reload a model or query status
+        """Reload or switch to a new model version
         """
         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
         context.set_details('Method not implemented!')
         raise NotImplementedError('Method not implemented!')
 
     def Status(self, request, context):
-        """Missing associated documentation comment in .proto file."""
+        """Query the current model status
+        """
         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
         context.set_details('Method not implemented!')
         raise NotImplementedError('Method not implemented!')
@@ -122,8 +129,11 @@ def add_AIInferenceServicer_to_server(servicer, server):
 
  # This class is part of an EXPERIMENTAL API.
 class AIInference(object):
-    """--- AI Service ---
-    Performs semantic and risk analysis on parsed code or reports
+    """============================================================
+    AIInference Service
+    ============================================================
+    This service handles AI model inference, including single predictions,
+    batch predictions, model reloading, and runtime status checks.
     """
 
     @staticmethod
@@ -236,7 +246,12 @@ class AIInference(object):
 
 
 class AIServiceStub(object):
-    """Missing associated documentation comment in .proto file."""
+    """============================================================
+    AIService
+    ============================================================
+    This service provides higher-level AI operations such as
+    semantic or structural analysis of source code.
+    """
 
     def __init__(self, channel):
         """Constructor.
@@ -252,7 +267,12 @@ class AIServiceStub(object):
 
 
 class AIServiceServicer(object):
-    """Missing associated documentation comment in .proto file."""
+    """============================================================
+    AIService
+    ============================================================
+    This service provides higher-level AI operations such as
+    semantic or structural analysis of source code.
+    """
 
     def AnalyzeCode(self, request, context):
         """Missing associated documentation comment in .proto file."""
@@ -277,7 +297,12 @@ def add_AIServiceServicer_to_server(servicer, server):
 
  # This class is part of an EXPERIMENTAL API.
 class AIService(object):
-    """Missing associated documentation comment in .proto file."""
+    """============================================================
+    AIService
+    ============================================================
+    This service provides higher-level AI operations such as
+    semantic or structural analysis of source code.
+    """
 
     @staticmethod
     def AnalyzeCode(request,
