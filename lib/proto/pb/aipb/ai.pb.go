@@ -23,8 +23,8 @@ const (
 
 type PredictRequest struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	Input         []byte                 `protobuf:"bytes,1,opt,name=input,proto3" json:"input,omitempty"` // opaque input, typically serialized tensor(s)
-	Model         string                 `protobuf:"bytes,2,opt,name=model,proto3" json:"model,omitempty"` // optional model name/version
+	Input         []byte                 `protobuf:"bytes,1,opt,name=input,proto3" json:"input,omitempty"` // Serialized tensor or model input
+	Model         string                 `protobuf:"bytes,2,opt,name=model,proto3" json:"model,omitempty"` // Optional model name or version
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -75,7 +75,7 @@ func (x *PredictRequest) GetModel() string {
 
 type PredictResponse struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	Output        []byte                 `protobuf:"bytes,1,opt,name=output,proto3" json:"output,omitempty"` // opaque output, typically serialized tensor(s)
+	Output        []byte                 `protobuf:"bytes,1,opt,name=output,proto3" json:"output,omitempty"` // Serialized tensor or model output
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -119,7 +119,7 @@ func (x *PredictResponse) GetOutput() []byte {
 
 type PredictBatchRequest struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	Inputs        [][]byte               `protobuf:"bytes,1,rep,name=inputs,proto3" json:"inputs,omitempty"`
+	Inputs        [][]byte               `protobuf:"bytes,1,rep,name=inputs,proto3" json:"inputs,omitempty"` // Multiple serialized inputs
 	Model         string                 `protobuf:"bytes,2,opt,name=model,proto3" json:"model,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
@@ -169,120 +169,16 @@ func (x *PredictBatchRequest) GetModel() string {
 	return ""
 }
 
-type AIAnalyzeRequest struct {
-	state         protoimpl.MessageState `protogen:"open.v1"`
-	Language      string                 `protobuf:"bytes,1,opt,name=language,proto3" json:"language,omitempty"`
-	CodeStructure string                 `protobuf:"bytes,2,opt,name=code_structure,json=codeStructure,proto3" json:"code_structure,omitempty"`
-	unknownFields protoimpl.UnknownFields
-	sizeCache     protoimpl.SizeCache
-}
-
-func (x *AIAnalyzeRequest) Reset() {
-	*x = AIAnalyzeRequest{}
-	mi := &file_ai_proto_msgTypes[3]
-	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-	ms.StoreMessageInfo(mi)
-}
-
-func (x *AIAnalyzeRequest) String() string {
-	return protoimpl.X.MessageStringOf(x)
-}
-
-func (*AIAnalyzeRequest) ProtoMessage() {}
-
-func (x *AIAnalyzeRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_ai_proto_msgTypes[3]
-	if x != nil {
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		if ms.LoadMessageInfo() == nil {
-			ms.StoreMessageInfo(mi)
-		}
-		return ms
-	}
-	return mi.MessageOf(x)
-}
-
-// Deprecated: Use AIAnalyzeRequest.ProtoReflect.Descriptor instead.
-func (*AIAnalyzeRequest) Descriptor() ([]byte, []int) {
-	return file_ai_proto_rawDescGZIP(), []int{3}
-}
-
-func (x *AIAnalyzeRequest) GetLanguage() string {
-	if x != nil {
-		return x.Language
-	}
-	return ""
-}
-
-func (x *AIAnalyzeRequest) GetCodeStructure() string {
-	if x != nil {
-		return x.CodeStructure
-	}
-	return ""
-}
-
-type AIAnalyzeResponse struct {
-	state         protoimpl.MessageState `protogen:"open.v1"`
-	Insights      string                 `protobuf:"bytes,1,opt,name=insights,proto3" json:"insights,omitempty"` // e.g., "Detected MVC pattern", "Possible logic flaw"
-	Confidence    string                 `protobuf:"bytes,2,opt,name=confidence,proto3" json:"confidence,omitempty"`
-	unknownFields protoimpl.UnknownFields
-	sizeCache     protoimpl.SizeCache
-}
-
-func (x *AIAnalyzeResponse) Reset() {
-	*x = AIAnalyzeResponse{}
-	mi := &file_ai_proto_msgTypes[4]
-	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-	ms.StoreMessageInfo(mi)
-}
-
-func (x *AIAnalyzeResponse) String() string {
-	return protoimpl.X.MessageStringOf(x)
-}
-
-func (*AIAnalyzeResponse) ProtoMessage() {}
-
-func (x *AIAnalyzeResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_ai_proto_msgTypes[4]
-	if x != nil {
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		if ms.LoadMessageInfo() == nil {
-			ms.StoreMessageInfo(mi)
-		}
-		return ms
-	}
-	return mi.MessageOf(x)
-}
-
-// Deprecated: Use AIAnalyzeResponse.ProtoReflect.Descriptor instead.
-func (*AIAnalyzeResponse) Descriptor() ([]byte, []int) {
-	return file_ai_proto_rawDescGZIP(), []int{4}
-}
-
-func (x *AIAnalyzeResponse) GetInsights() string {
-	if x != nil {
-		return x.Insights
-	}
-	return ""
-}
-
-func (x *AIAnalyzeResponse) GetConfidence() string {
-	if x != nil {
-		return x.Confidence
-	}
-	return ""
-}
-
 type PredictBatchResponse struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	Outputs       [][]byte               `protobuf:"bytes,1,rep,name=outputs,proto3" json:"outputs,omitempty"`
+	Outputs       [][]byte               `protobuf:"bytes,1,rep,name=outputs,proto3" json:"outputs,omitempty"` // Multiple serialized outputs
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
 
 func (x *PredictBatchResponse) Reset() {
 	*x = PredictBatchResponse{}
-	mi := &file_ai_proto_msgTypes[5]
+	mi := &file_ai_proto_msgTypes[3]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -294,7 +190,7 @@ func (x *PredictBatchResponse) String() string {
 func (*PredictBatchResponse) ProtoMessage() {}
 
 func (x *PredictBatchResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_ai_proto_msgTypes[5]
+	mi := &file_ai_proto_msgTypes[3]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -307,7 +203,7 @@ func (x *PredictBatchResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use PredictBatchResponse.ProtoReflect.Descriptor instead.
 func (*PredictBatchResponse) Descriptor() ([]byte, []int) {
-	return file_ai_proto_rawDescGZIP(), []int{5}
+	return file_ai_proto_rawDescGZIP(), []int{3}
 }
 
 func (x *PredictBatchResponse) GetOutputs() [][]byte {
@@ -319,14 +215,14 @@ func (x *PredictBatchResponse) GetOutputs() [][]byte {
 
 type ReloadModelRequest struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	ModelPath     string                 `protobuf:"bytes,1,opt,name=model_path,json=modelPath,proto3" json:"model_path,omitempty"` // path or object store URI
+	ModelPath     string                 `protobuf:"bytes,1,opt,name=model_path,json=modelPath,proto3" json:"model_path,omitempty"` // Path or object store URI to model file
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
 
 func (x *ReloadModelRequest) Reset() {
 	*x = ReloadModelRequest{}
-	mi := &file_ai_proto_msgTypes[6]
+	mi := &file_ai_proto_msgTypes[4]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -338,7 +234,7 @@ func (x *ReloadModelRequest) String() string {
 func (*ReloadModelRequest) ProtoMessage() {}
 
 func (x *ReloadModelRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_ai_proto_msgTypes[6]
+	mi := &file_ai_proto_msgTypes[4]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -351,7 +247,7 @@ func (x *ReloadModelRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ReloadModelRequest.ProtoReflect.Descriptor instead.
 func (*ReloadModelRequest) Descriptor() ([]byte, []int) {
-	return file_ai_proto_rawDescGZIP(), []int{6}
+	return file_ai_proto_rawDescGZIP(), []int{4}
 }
 
 func (x *ReloadModelRequest) GetModelPath() string {
@@ -371,7 +267,7 @@ type ReloadModelResponse struct {
 
 func (x *ReloadModelResponse) Reset() {
 	*x = ReloadModelResponse{}
-	mi := &file_ai_proto_msgTypes[7]
+	mi := &file_ai_proto_msgTypes[5]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -383,7 +279,7 @@ func (x *ReloadModelResponse) String() string {
 func (*ReloadModelResponse) ProtoMessage() {}
 
 func (x *ReloadModelResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_ai_proto_msgTypes[7]
+	mi := &file_ai_proto_msgTypes[5]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -396,7 +292,7 @@ func (x *ReloadModelResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ReloadModelResponse.ProtoReflect.Descriptor instead.
 func (*ReloadModelResponse) Descriptor() ([]byte, []int) {
-	return file_ai_proto_rawDescGZIP(), []int{7}
+	return file_ai_proto_rawDescGZIP(), []int{5}
 }
 
 func (x *ReloadModelResponse) GetOk() bool {
@@ -421,7 +317,7 @@ type StatusRequest struct {
 
 func (x *StatusRequest) Reset() {
 	*x = StatusRequest{}
-	mi := &file_ai_proto_msgTypes[8]
+	mi := &file_ai_proto_msgTypes[6]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -433,7 +329,7 @@ func (x *StatusRequest) String() string {
 func (*StatusRequest) ProtoMessage() {}
 
 func (x *StatusRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_ai_proto_msgTypes[8]
+	mi := &file_ai_proto_msgTypes[6]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -446,21 +342,21 @@ func (x *StatusRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use StatusRequest.ProtoReflect.Descriptor instead.
 func (*StatusRequest) Descriptor() ([]byte, []int) {
-	return file_ai_proto_rawDescGZIP(), []int{8}
+	return file_ai_proto_rawDescGZIP(), []int{6}
 }
 
 type StatusResponse struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	Model         string                 `protobuf:"bytes,1,opt,name=model,proto3" json:"model,omitempty"`
 	Version       string                 `protobuf:"bytes,2,opt,name=version,proto3" json:"version,omitempty"`
-	State         string                 `protobuf:"bytes,3,opt,name=state,proto3" json:"state,omitempty"` // e.g., "loaded", "error", "no_model"
+	State         string                 `protobuf:"bytes,3,opt,name=state,proto3" json:"state,omitempty"` // e.g. "loaded", "error", "no_model"
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
 
 func (x *StatusResponse) Reset() {
 	*x = StatusResponse{}
-	mi := &file_ai_proto_msgTypes[9]
+	mi := &file_ai_proto_msgTypes[7]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -472,7 +368,7 @@ func (x *StatusResponse) String() string {
 func (*StatusResponse) ProtoMessage() {}
 
 func (x *StatusResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_ai_proto_msgTypes[9]
+	mi := &file_ai_proto_msgTypes[7]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -485,7 +381,7 @@ func (x *StatusResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use StatusResponse.ProtoReflect.Descriptor instead.
 func (*StatusResponse) Descriptor() ([]byte, []int) {
-	return file_ai_proto_rawDescGZIP(), []int{9}
+	return file_ai_proto_rawDescGZIP(), []int{7}
 }
 
 func (x *StatusResponse) GetModel() string {
@@ -509,6 +405,110 @@ func (x *StatusResponse) GetState() string {
 	return ""
 }
 
+type AIAnalyzeRequest struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Language      string                 `protobuf:"bytes,1,opt,name=language,proto3" json:"language,omitempty"`                                // Programming language (e.g. "Python", "Go")
+	CodeStructure string                 `protobuf:"bytes,2,opt,name=code_structure,json=codeStructure,proto3" json:"code_structure,omitempty"` // Code structure, AST, or intermediate representation
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *AIAnalyzeRequest) Reset() {
+	*x = AIAnalyzeRequest{}
+	mi := &file_ai_proto_msgTypes[8]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *AIAnalyzeRequest) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*AIAnalyzeRequest) ProtoMessage() {}
+
+func (x *AIAnalyzeRequest) ProtoReflect() protoreflect.Message {
+	mi := &file_ai_proto_msgTypes[8]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use AIAnalyzeRequest.ProtoReflect.Descriptor instead.
+func (*AIAnalyzeRequest) Descriptor() ([]byte, []int) {
+	return file_ai_proto_rawDescGZIP(), []int{8}
+}
+
+func (x *AIAnalyzeRequest) GetLanguage() string {
+	if x != nil {
+		return x.Language
+	}
+	return ""
+}
+
+func (x *AIAnalyzeRequest) GetCodeStructure() string {
+	if x != nil {
+		return x.CodeStructure
+	}
+	return ""
+}
+
+type AIAnalyzeResponse struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Insights      string                 `protobuf:"bytes,1,opt,name=insights,proto3" json:"insights,omitempty"`     // Example: "Detected MVC pattern", "Possible logic flaw"
+	Confidence    string                 `protobuf:"bytes,2,opt,name=confidence,proto3" json:"confidence,omitempty"` // Confidence level or score
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *AIAnalyzeResponse) Reset() {
+	*x = AIAnalyzeResponse{}
+	mi := &file_ai_proto_msgTypes[9]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *AIAnalyzeResponse) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*AIAnalyzeResponse) ProtoMessage() {}
+
+func (x *AIAnalyzeResponse) ProtoReflect() protoreflect.Message {
+	mi := &file_ai_proto_msgTypes[9]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use AIAnalyzeResponse.ProtoReflect.Descriptor instead.
+func (*AIAnalyzeResponse) Descriptor() ([]byte, []int) {
+	return file_ai_proto_rawDescGZIP(), []int{9}
+}
+
+func (x *AIAnalyzeResponse) GetInsights() string {
+	if x != nil {
+		return x.Insights
+	}
+	return ""
+}
+
+func (x *AIAnalyzeResponse) GetConfidence() string {
+	if x != nil {
+		return x.Confidence
+	}
+	return ""
+}
+
 var File_ai_proto protoreflect.FileDescriptor
 
 const file_ai_proto_rawDesc = "" +
@@ -521,15 +521,7 @@ const file_ai_proto_rawDesc = "" +
 	"\x06output\x18\x01 \x01(\fR\x06output\"C\n" +
 	"\x13PredictBatchRequest\x12\x16\n" +
 	"\x06inputs\x18\x01 \x03(\fR\x06inputs\x12\x14\n" +
-	"\x05model\x18\x02 \x01(\tR\x05model\"U\n" +
-	"\x10AIAnalyzeRequest\x12\x1a\n" +
-	"\blanguage\x18\x01 \x01(\tR\blanguage\x12%\n" +
-	"\x0ecode_structure\x18\x02 \x01(\tR\rcodeStructure\"O\n" +
-	"\x11AIAnalyzeResponse\x12\x1a\n" +
-	"\binsights\x18\x01 \x01(\tR\binsights\x12\x1e\n" +
-	"\n" +
-	"confidence\x18\x02 \x01(\tR\n" +
-	"confidence\"0\n" +
+	"\x05model\x18\x02 \x01(\tR\x05model\"0\n" +
 	"\x14PredictBatchResponse\x12\x18\n" +
 	"\aoutputs\x18\x01 \x03(\fR\aoutputs\"3\n" +
 	"\x12ReloadModelRequest\x12\x1d\n" +
@@ -542,7 +534,15 @@ const file_ai_proto_rawDesc = "" +
 	"\x0eStatusResponse\x12\x14\n" +
 	"\x05model\x18\x01 \x01(\tR\x05model\x12\x18\n" +
 	"\aversion\x18\x02 \x01(\tR\aversion\x12\x14\n" +
-	"\x05state\x18\x03 \x01(\tR\x05state2\xa5\x02\n" +
+	"\x05state\x18\x03 \x01(\tR\x05state\"U\n" +
+	"\x10AIAnalyzeRequest\x12\x1a\n" +
+	"\blanguage\x18\x01 \x01(\tR\blanguage\x12%\n" +
+	"\x0ecode_structure\x18\x02 \x01(\tR\rcodeStructure\"O\n" +
+	"\x11AIAnalyzeResponse\x12\x1a\n" +
+	"\binsights\x18\x01 \x01(\tR\binsights\x12\x1e\n" +
+	"\n" +
+	"confidence\x18\x02 \x01(\tR\n" +
+	"confidence2\xa5\x02\n" +
 	"\vAIInference\x12>\n" +
 	"\aPredict\x12\x17.pb.aipb.PredictRequest\x1a\x18.pb.aipb.PredictResponse\"\x00\x12M\n" +
 	"\fPredictBatch\x12\x1c.pb.aipb.PredictBatchRequest\x1a\x1d.pb.aipb.PredictBatchResponse\"\x00\x12J\n" +
@@ -568,25 +568,25 @@ var file_ai_proto_goTypes = []any{
 	(*PredictRequest)(nil),       // 0: pb.aipb.PredictRequest
 	(*PredictResponse)(nil),      // 1: pb.aipb.PredictResponse
 	(*PredictBatchRequest)(nil),  // 2: pb.aipb.PredictBatchRequest
-	(*AIAnalyzeRequest)(nil),     // 3: pb.aipb.AIAnalyzeRequest
-	(*AIAnalyzeResponse)(nil),    // 4: pb.aipb.AIAnalyzeResponse
-	(*PredictBatchResponse)(nil), // 5: pb.aipb.PredictBatchResponse
-	(*ReloadModelRequest)(nil),   // 6: pb.aipb.ReloadModelRequest
-	(*ReloadModelResponse)(nil),  // 7: pb.aipb.ReloadModelResponse
-	(*StatusRequest)(nil),        // 8: pb.aipb.StatusRequest
-	(*StatusResponse)(nil),       // 9: pb.aipb.StatusResponse
+	(*PredictBatchResponse)(nil), // 3: pb.aipb.PredictBatchResponse
+	(*ReloadModelRequest)(nil),   // 4: pb.aipb.ReloadModelRequest
+	(*ReloadModelResponse)(nil),  // 5: pb.aipb.ReloadModelResponse
+	(*StatusRequest)(nil),        // 6: pb.aipb.StatusRequest
+	(*StatusResponse)(nil),       // 7: pb.aipb.StatusResponse
+	(*AIAnalyzeRequest)(nil),     // 8: pb.aipb.AIAnalyzeRequest
+	(*AIAnalyzeResponse)(nil),    // 9: pb.aipb.AIAnalyzeResponse
 }
 var file_ai_proto_depIdxs = []int32{
 	0, // 0: pb.aipb.AIInference.Predict:input_type -> pb.aipb.PredictRequest
 	2, // 1: pb.aipb.AIInference.PredictBatch:input_type -> pb.aipb.PredictBatchRequest
-	6, // 2: pb.aipb.AIInference.ReloadModel:input_type -> pb.aipb.ReloadModelRequest
-	8, // 3: pb.aipb.AIInference.Status:input_type -> pb.aipb.StatusRequest
-	3, // 4: pb.aipb.AIService.AnalyzeCode:input_type -> pb.aipb.AIAnalyzeRequest
+	4, // 2: pb.aipb.AIInference.ReloadModel:input_type -> pb.aipb.ReloadModelRequest
+	6, // 3: pb.aipb.AIInference.Status:input_type -> pb.aipb.StatusRequest
+	8, // 4: pb.aipb.AIService.AnalyzeCode:input_type -> pb.aipb.AIAnalyzeRequest
 	1, // 5: pb.aipb.AIInference.Predict:output_type -> pb.aipb.PredictResponse
-	5, // 6: pb.aipb.AIInference.PredictBatch:output_type -> pb.aipb.PredictBatchResponse
-	7, // 7: pb.aipb.AIInference.ReloadModel:output_type -> pb.aipb.ReloadModelResponse
-	9, // 8: pb.aipb.AIInference.Status:output_type -> pb.aipb.StatusResponse
-	4, // 9: pb.aipb.AIService.AnalyzeCode:output_type -> pb.aipb.AIAnalyzeResponse
+	3, // 6: pb.aipb.AIInference.PredictBatch:output_type -> pb.aipb.PredictBatchResponse
+	5, // 7: pb.aipb.AIInference.ReloadModel:output_type -> pb.aipb.ReloadModelResponse
+	7, // 8: pb.aipb.AIInference.Status:output_type -> pb.aipb.StatusResponse
+	9, // 9: pb.aipb.AIService.AnalyzeCode:output_type -> pb.aipb.AIAnalyzeResponse
 	5, // [5:10] is the sub-list for method output_type
 	0, // [0:5] is the sub-list for method input_type
 	0, // [0:0] is the sub-list for extension type_name

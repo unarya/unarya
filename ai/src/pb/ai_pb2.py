@@ -24,7 +24,7 @@ _sym_db = _symbol_database.Default()
 
 
 
-DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n\x08\x61i.proto\x12\x07pb.aipb\".\n\x0ePredictRequest\x12\r\n\x05input\x18\x01 \x01(\x0c\x12\r\n\x05model\x18\x02 \x01(\t\"!\n\x0fPredictResponse\x12\x0e\n\x06output\x18\x01 \x01(\x0c\"4\n\x13PredictBatchRequest\x12\x0e\n\x06inputs\x18\x01 \x03(\x0c\x12\r\n\x05model\x18\x02 \x01(\t\"<\n\x10\x41IAnalyzeRequest\x12\x10\n\x08language\x18\x01 \x01(\t\x12\x16\n\x0e\x63ode_structure\x18\x02 \x01(\t\"9\n\x11\x41IAnalyzeResponse\x12\x10\n\x08insights\x18\x01 \x01(\t\x12\x12\n\nconfidence\x18\x02 \x01(\t\"\'\n\x14PredictBatchResponse\x12\x0f\n\x07outputs\x18\x01 \x03(\x0c\"(\n\x12ReloadModelRequest\x12\x12\n\nmodel_path\x18\x01 \x01(\t\"2\n\x13ReloadModelResponse\x12\n\n\x02ok\x18\x01 \x01(\x08\x12\x0f\n\x07message\x18\x02 \x01(\t\"\x0f\n\rStatusRequest\"?\n\x0eStatusResponse\x12\r\n\x05model\x18\x01 \x01(\t\x12\x0f\n\x07version\x18\x02 \x01(\t\x12\r\n\x05state\x18\x03 \x01(\t2\xa5\x02\n\x0b\x41IInference\x12>\n\x07Predict\x12\x17.pb.aipb.PredictRequest\x1a\x18.pb.aipb.PredictResponse\"\x00\x12M\n\x0cPredictBatch\x12\x1c.pb.aipb.PredictBatchRequest\x1a\x1d.pb.aipb.PredictBatchResponse\"\x00\x12J\n\x0bReloadModel\x12\x1b.pb.aipb.ReloadModelRequest\x1a\x1c.pb.aipb.ReloadModelResponse\"\x00\x12;\n\x06Status\x12\x16.pb.aipb.StatusRequest\x1a\x17.pb.aipb.StatusResponse\"\x00\x32Q\n\tAIService\x12\x44\n\x0b\x41nalyzeCode\x12\x19.pb.aipb.AIAnalyzeRequest\x1a\x1a.pb.aipb.AIAnalyzeResponseB,Z*github.com/unarya/unarya/lib/proto/pb/aipbb\x06proto3')
+DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n\x08\x61i.proto\x12\x07pb.aipb\".\n\x0ePredictRequest\x12\r\n\x05input\x18\x01 \x01(\x0c\x12\r\n\x05model\x18\x02 \x01(\t\"!\n\x0fPredictResponse\x12\x0e\n\x06output\x18\x01 \x01(\x0c\"4\n\x13PredictBatchRequest\x12\x0e\n\x06inputs\x18\x01 \x03(\x0c\x12\r\n\x05model\x18\x02 \x01(\t\"\'\n\x14PredictBatchResponse\x12\x0f\n\x07outputs\x18\x01 \x03(\x0c\"(\n\x12ReloadModelRequest\x12\x12\n\nmodel_path\x18\x01 \x01(\t\"2\n\x13ReloadModelResponse\x12\n\n\x02ok\x18\x01 \x01(\x08\x12\x0f\n\x07message\x18\x02 \x01(\t\"\x0f\n\rStatusRequest\"?\n\x0eStatusResponse\x12\r\n\x05model\x18\x01 \x01(\t\x12\x0f\n\x07version\x18\x02 \x01(\t\x12\r\n\x05state\x18\x03 \x01(\t\"<\n\x10\x41IAnalyzeRequest\x12\x10\n\x08language\x18\x01 \x01(\t\x12\x16\n\x0e\x63ode_structure\x18\x02 \x01(\t\"9\n\x11\x41IAnalyzeResponse\x12\x10\n\x08insights\x18\x01 \x01(\t\x12\x12\n\nconfidence\x18\x02 \x01(\t2\xa5\x02\n\x0b\x41IInference\x12>\n\x07Predict\x12\x17.pb.aipb.PredictRequest\x1a\x18.pb.aipb.PredictResponse\"\x00\x12M\n\x0cPredictBatch\x12\x1c.pb.aipb.PredictBatchRequest\x1a\x1d.pb.aipb.PredictBatchResponse\"\x00\x12J\n\x0bReloadModel\x12\x1b.pb.aipb.ReloadModelRequest\x1a\x1c.pb.aipb.ReloadModelResponse\"\x00\x12;\n\x06Status\x12\x16.pb.aipb.StatusRequest\x1a\x17.pb.aipb.StatusResponse\"\x00\x32Q\n\tAIService\x12\x44\n\x0b\x41nalyzeCode\x12\x19.pb.aipb.AIAnalyzeRequest\x1a\x1a.pb.aipb.AIAnalyzeResponseB,Z*github.com/unarya/unarya/lib/proto/pb/aipbb\x06proto3')
 
 _globals = globals()
 _builder.BuildMessageAndEnumDescriptors(DESCRIPTOR, _globals)
@@ -38,20 +38,20 @@ if not _descriptor._USE_C_DESCRIPTORS:
   _globals['_PREDICTRESPONSE']._serialized_end=102
   _globals['_PREDICTBATCHREQUEST']._serialized_start=104
   _globals['_PREDICTBATCHREQUEST']._serialized_end=156
-  _globals['_AIANALYZEREQUEST']._serialized_start=158
-  _globals['_AIANALYZEREQUEST']._serialized_end=218
-  _globals['_AIANALYZERESPONSE']._serialized_start=220
-  _globals['_AIANALYZERESPONSE']._serialized_end=277
-  _globals['_PREDICTBATCHRESPONSE']._serialized_start=279
-  _globals['_PREDICTBATCHRESPONSE']._serialized_end=318
-  _globals['_RELOADMODELREQUEST']._serialized_start=320
-  _globals['_RELOADMODELREQUEST']._serialized_end=360
-  _globals['_RELOADMODELRESPONSE']._serialized_start=362
-  _globals['_RELOADMODELRESPONSE']._serialized_end=412
-  _globals['_STATUSREQUEST']._serialized_start=414
-  _globals['_STATUSREQUEST']._serialized_end=429
-  _globals['_STATUSRESPONSE']._serialized_start=431
-  _globals['_STATUSRESPONSE']._serialized_end=494
+  _globals['_PREDICTBATCHRESPONSE']._serialized_start=158
+  _globals['_PREDICTBATCHRESPONSE']._serialized_end=197
+  _globals['_RELOADMODELREQUEST']._serialized_start=199
+  _globals['_RELOADMODELREQUEST']._serialized_end=239
+  _globals['_RELOADMODELRESPONSE']._serialized_start=241
+  _globals['_RELOADMODELRESPONSE']._serialized_end=291
+  _globals['_STATUSREQUEST']._serialized_start=293
+  _globals['_STATUSREQUEST']._serialized_end=308
+  _globals['_STATUSRESPONSE']._serialized_start=310
+  _globals['_STATUSRESPONSE']._serialized_end=373
+  _globals['_AIANALYZEREQUEST']._serialized_start=375
+  _globals['_AIANALYZEREQUEST']._serialized_end=435
+  _globals['_AIANALYZERESPONSE']._serialized_start=437
+  _globals['_AIANALYZERESPONSE']._serialized_end=494
   _globals['_AIINFERENCE']._serialized_start=497
   _globals['_AIINFERENCE']._serialized_end=790
   _globals['_AISERVICE']._serialized_start=792
