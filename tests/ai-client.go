@@ -26,8 +26,8 @@ func main() {
 	defer cancel()
 
 	req := &aipb.AIAnalyzeRequest{
-		Language:      "python",
-		CodeStructure: "def hello(): print('hi')",
+		Language:      "javascript",
+		CodeStructure: "function hello(){ console.log('hi') }",
 	}
 
 	res, err := client.AnalyzeCode(ctx, req)
