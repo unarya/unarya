@@ -1,4 +1,4 @@
-package collector
+package domain
 
 import (
 	"archive/tar"
@@ -10,10 +10,12 @@ import (
 	"os"
 	"path/filepath"
 	"strings"
+
+	"github.com/unarya/unarya/pkg/types"
 )
 
 // CollectFromArchive downloads and extracts a ZIP or TAR.GZ archive.
-func CollectFromArchive(cfg SourceConfig) (*CollectionResult, error) {
+func CollectFromArchive(cfg types.SourceConfig) (*types.CollectionResult, error) {
 	if cfg.URL == "" {
 		return nil, fmt.Errorf("archive url is empty")
 	}

@@ -1,11 +1,10 @@
-
 go 1.25.0
 
 use (
 	.
-	cmd/orchestrator
+	cmd/ai-runtime
 	cmd/collector
+	cmd/orchestrator
 	cmd/parser
 	cmd/security_scan
-	cmd/ai-runtime
 )

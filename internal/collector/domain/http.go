@@ -1,4 +1,4 @@
-package collector
+package domain
 
 import (
 	"fmt"
@@ -6,10 +6,12 @@ import (
 	"net/http"
 	"os"
 	"path/filepath"
+
+	"github.com/unarya/unarya/pkg/types"
 )
 
 // CollectFromURL downloads a single file or directory structure via HTTP(S).
-func CollectFromURL(cfg SourceConfig) (*CollectionResult, error) {
+func CollectFromURL(cfg types.SourceConfig) (*types.CollectionResult, error) {
 	if cfg.URL == "" {
 		return nil, fmt.Errorf("url is empty")
 	}

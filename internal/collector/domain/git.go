@@ -1,15 +1,17 @@
-package collector
+package domain
 
 import (
 	"fmt"
 	"os"
 	"os/exec"
 	"path/filepath"
+
+	"github.com/unarya/unarya/pkg/types"
 )
 
 // CollectFromGit clones a repository from a given Git URL and branch.
 // Supports both public and private repositories (via token).
-func CollectFromGit(cfg SourceConfig) (*CollectionResult, error) {
+func CollectFromGit(cfg types.SourceConfig) (*types.CollectionResult, error) {
 	if cfg.URL == "" {
 		return nil, fmt.Errorf("git url is empty")
 	}
