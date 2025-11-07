@@ -3,7 +3,7 @@ module ai-runtime
 go 1.25.0
 
 require (
-	github.com/unarya/unarya v0.11.0-alpha.1
+	github.com/unarya/unarya v0.12.0-alpha.1
 	github.com/yalue/onnxruntime_go v1.21.0
 	google.golang.org/grpc v1.76.0
 )
