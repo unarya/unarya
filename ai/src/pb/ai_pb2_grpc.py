@@ -29,7 +29,7 @@ class AIInferenceStub(object):
     """============================================================
     AIInference Service
     ============================================================
-    This service handles AI model inference, including single predictions,
+    This services handles AI model inference, including single predictions,
     batch predictions, model reloading, and runtime status checks.
     """
 
@@ -65,7 +65,7 @@ class AIInferenceServicer(object):
     """============================================================
     AIInference Service
     ============================================================
-    This service handles AI model inference, including single predictions,
+    This services handles AI model inference, including single predictions,
     batch predictions, model reloading, and runtime status checks.
     """
 
@@ -132,7 +132,7 @@ class AIInference(object):
     """============================================================
     AIInference Service
     ============================================================
-    This service handles AI model inference, including single predictions,
+    This services handles AI model inference, including single predictions,
     batch predictions, model reloading, and runtime status checks.
     """
 
@@ -249,7 +249,7 @@ class AIServiceStub(object):
     """============================================================
     AIService
     ============================================================
-    This service provides higher-level AI operations such as
+    This services provides higher-level AI operations such as
     semantic or structural analysis of source code.
     """
 
@@ -270,7 +270,7 @@ class AIServiceServicer(object):
     """============================================================
     AIService
     ============================================================
-    This service provides higher-level AI operations such as
+    This services provides higher-level AI operations such as
     semantic or structural analysis of source code.
     """
 
@@ -300,7 +300,7 @@ class AIService(object):
     """============================================================
     AIService
     ============================================================
-    This service provides higher-level AI operations such as
+    This services provides higher-level AI operations such as
     semantic or structural analysis of source code.
     """
 

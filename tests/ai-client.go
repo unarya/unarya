@@ -16,7 +16,7 @@ func main() {
 		grpc.WithTransportCredentials(insecure.NewCredentials()),
 	)
 	if err != nil {
-		log.Fatalf("❌ Cannot connect to ML service: %v", err)
+		log.Fatalf("❌ Cannot connect to ML services: %v", err)
 	}
 	defer conn.Close()
 
@@ -26,8 +26,8 @@ func main() {
 	defer cancel()
 
 	req := &aipb.AIAnalyzeRequest{
-		Language:      "python",
-		CodeStructure: "def hello(): print('hi')",
+		Language:      "javascript",
+		CodeStructure: "function hello(){ console.log('hi') }",
 	}
 
 	res, err := client.AnalyzeCode(ctx, req)

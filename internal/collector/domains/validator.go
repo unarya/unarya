@@ -1,13 +1,15 @@
-package collector
+package domains
 
 import (
 	"errors"
 	"net/url"
 	"strings"
+
+	"github.com/unarya/unarya/pkg/types"
 )
 
 // ValidateSource ensures the input source configuration is safe and valid.
-func ValidateSource(cfg SourceConfig) error {
+func ValidateSource(cfg types.SourceConfig) error {
 	if cfg.URL == "" {
 		return errors.New("missing source URL")
 	}
@@ -35,7 +37,7 @@ func ValidateSource(cfg SourceConfig) error {
 			return errors.New("invalid http source")
 		}
 	default:
-		return ErrInvalidSourceType
+		return types.ErrInvalidSourceType
 	}
 	return nil
 }

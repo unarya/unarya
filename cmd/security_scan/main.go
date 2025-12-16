@@ -21,7 +21,7 @@ type SecurityScannerServer struct {
 	security_scanpb.UnimplementedSecurityScanServiceServer
 }
 
-// main starts the gRPC security scanner service
+// main starts the gRPC security scanner services
 func main() {
 	port := os.Getenv("SECURITY_SCAN_PORT")
 	if port == "" {
@@ -36,7 +36,7 @@ func main() {
 	s := grpc.NewServer()
 	security_scanpb.RegisterSecurityScanServiceServer(s, &SecurityScannerServer{})
 
-	log.Printf("🛡️  Security Scan service started on port %s", port)
+	log.Printf("🛡️  Security Scan services started on port %s", port)
 	if err := s.Serve(lis); err != nil {
 		log.Fatalf("Failed to serve: %v", err)
 	}

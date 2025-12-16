@@ -1,15 +1,16 @@
-// file: /internal/collector/scan.go
-package collector
+package domains
 
 import (
 	"io/fs"
 	"os"
 	"path/filepath"
+
+	"github.com/unarya/unarya/pkg/types"
 )
 
 // scanFiles recursively walks a directory and gathers file info.
-func scanFiles(root string) (*CollectionResult, error) {
-	result := &CollectionResult{}
+func scanFiles(root string) (*types.CollectionResult, error) {
+	result := &types.CollectionResult{}
 	err := filepath.WalkDir(root, func(path string, d fs.DirEntry, err error) error {
 		if err != nil {
 			return err
@@ -21,7 +22,7 @@ func scanFiles(root string) (*CollectionResult, error) {
 		if err != nil {
 			return err
 		}
-		result.Files = append(result.Files, FileInfo{
+		result.Files = append(result.Files, types.FileInfo{
 			Name: filepath.Base(path),
 			Path: path,
 			Size: info.Size(),

@@ -11,7 +11,7 @@ class CodeContext:
 
 @dataclass
 class Service:
-    """Mô tả một service trong docker-compose.yml."""
+    """Mô tả một services trong docker-compose.yml."""
     name: str
     image: str
     ports: List[str]

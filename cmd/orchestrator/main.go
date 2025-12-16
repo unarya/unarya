@@ -105,7 +105,7 @@ func StartOrchestrator() error {
 	grpcServer := grpc.NewServer()
 	orchestratorpb.RegisterOrchestratorServiceServer(grpcServer, &OrchestratorServer{})
 
-	log.Printf("[Unarya] 🚀 Orchestrator service started on port %s", port)
+	log.Printf("[Unarya] 🚀 Orchestrator services started on port %s", port)
 	return grpcServer.Serve(lis)
 }
 

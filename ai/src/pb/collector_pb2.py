@@ -24,7 +24,7 @@ _sym_db = _symbol_database.Default()
 
 
 
-DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n\x0f\x63ollector.proto\x12\x0b\x63ollectorpb\"8\n\nGitRequest\x12\x0b\n\x03url\x18\x01 \x01(\t\x12\x0e\n\x06\x62ranch\x18\x02 \x01(\t\x12\r\n\x05token\x18\x03 \x01(\t\"\x1d\n\x0e\x41rchiveRequest\x12\x0b\n\x03url\x18\x01 \x01(\t\"\x19\n\nURLRequest\x12\x0b\n\x03url\x18\x01 \x01(\t\"\x1e\n\x0fValidateRequest\x12\x0b\n\x03url\x18\x01 \x01(\t\"2\n\x10ValidateResponse\x12\r\n\x05valid\x18\x01 \x01(\x08\x12\x0f\n\x07message\x18\x02 \x01(\t\"2\n\x11\x43ollectorResponse\x12\x0f\n\x07message\x18\x01 \x01(\t\x12\x0c\n\x04path\x18\x02 \x01(\t2\xca\x02\n\x10\x43ollectorService\x12I\n\x0e\x43ollectFromGit\x12\x17.collectorpb.GitRequest\x1a\x1e.collectorpb.CollectorResponse\x12Q\n\x12\x43ollectFromArchive\x12\x1b.collectorpb.ArchiveRequest\x1a\x1e.collectorpb.CollectorResponse\x12I\n\x0e\x43ollectFromURL\x12\x17.collectorpb.URLRequest\x1a\x1e.collectorpb.CollectorResponse\x12M\n\x0eValidateSource\x12\x1c.collectorpb.ValidateRequest\x1a\x1d.collectorpb.ValidateResponseB3Z1github.com/unarya/unarya/lib/proto/pb/collectorpbb\x06proto3')
+DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n\x0f\x63ollector.proto\x12\x0b\x63ollectorpb\"8\n\nGitRequest\x12\x0b\n\x03url\x18\x01 \x01(\t\x12\x0e\n\x06\x62ranch\x18\x02 \x01(\t\x12\r\n\x05token\x18\x03 \x01(\t\"\x1d\n\x0e\x41rchiveRequest\x12\x0b\n\x03url\x18\x01 \x01(\t\"\x19\n\nURLRequest\x12\x0b\n\x03url\x18\x01 \x01(\t\"\x1e\n\x0fValidateRequest\x12\x0b\n\x03url\x18\x01 \x01(\t\"2\n\x10ValidateResponse\x12\r\n\x05valid\x18\x01 \x01(\x08\x12\x0f\n\x07message\x18\x02 \x01(\t\"2\n\x11\x43ollectorResponse\x12\x0f\n\x07message\x18\x01 \x01(\t\x12\x0c\n\x04path\x18\x02 \x01(\t\"&\n\x14ServiceReadyResponse\x12\x0e\n\x06status\x18\x01 \x01(\t\"\x07\n\x05\x45mpty\"$\n\x11ServiceOKResponse\x12\x0f\n\x07message\x18\x01 \x01(\t\"\x14\n\x04Path\x12\x0c\n\x04name\x18\x01 \x01(\t2\xca\x03\n\x10\x43ollectorService\x12>\n\x05Ready\x12\x12.collectorpb.Empty\x1a!.collectorpb.ServiceReadyResponse\x12I\n\x0e\x43ollectFromGit\x12\x17.collectorpb.GitRequest\x1a\x1e.collectorpb.CollectorResponse\x12Q\n\x12\x43ollectFromArchive\x12\x1b.collectorpb.ArchiveRequest\x1a\x1e.collectorpb.CollectorResponse\x12I\n\x0e\x43ollectFromURL\x12\x17.collectorpb.URLRequest\x1a\x1e.collectorpb.CollectorResponse\x12M\n\x0eValidateSource\x12\x1c.collectorpb.ValidateRequest\x1a\x1d.collectorpb.ValidateResponse\x12>\n\tRemoveDir\x12\x11.collectorpb.Path\x1a\x1e.collectorpb.ServiceOKResponseB3Z1github.com/unarya/unarya/lib/proto/pb/collectorpbb\x06proto3')
 
 _globals = globals()
 _builder.BuildMessageAndEnumDescriptors(DESCRIPTOR, _globals)
@@ -44,6 +44,14 @@ if not _descriptor._USE_C_DESCRIPTORS:
   _globals['_VALIDATERESPONSE']._serialized_end=230
   _globals['_COLLECTORRESPONSE']._serialized_start=232
   _globals['_COLLECTORRESPONSE']._serialized_end=282
-  _globals['_COLLECTORSERVICE']._serialized_start=285
-  _globals['_COLLECTORSERVICE']._serialized_end=615
+  _globals['_SERVICEREADYRESPONSE']._serialized_start=284
+  _globals['_SERVICEREADYRESPONSE']._serialized_end=322
+  _globals['_EMPTY']._serialized_start=324
+  _globals['_EMPTY']._serialized_end=331
+  _globals['_SERVICEOKRESPONSE']._serialized_start=333
+  _globals['_SERVICEOKRESPONSE']._serialized_end=369
+  _globals['_PATH']._serialized_start=371
+  _globals['_PATH']._serialized_end=391
+  _globals['_COLLECTORSERVICE']._serialized_start=394
+  _globals['_COLLECTORSERVICE']._serialized_end=852
 # @@protoc_insertion_point(module_scope)

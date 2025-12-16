@@ -1,4 +1,4 @@
-package collector
+package domains
 
 import (
 	"archive/tar"
@@ -10,15 +10,17 @@ import (
 	"os"
 	"path/filepath"
 	"strings"
+
+	"github.com/unarya/unarya/pkg/types"
 )
 
 // CollectFromArchive downloads and extracts a ZIP or TAR.GZ archive.
-func CollectFromArchive(cfg SourceConfig) (*CollectionResult, error) {
+func CollectFromArchive(cfg types.SourceConfig) (*types.CollectionResult, error) {
 	if cfg.URL == "" {
 		return nil, fmt.Errorf("archive url is empty")
 	}
-	if cfg.LocalPath == "" {
-		cfg.LocalPath = filepath.Join(os.TempDir(), "collector_archive")
+	if cfg.Path == "" {
+		cfg.Path = filepath.Join(os.TempDir(), "collector_archive")
 	}
 
 	tmpFile := filepath.Join(os.TempDir(), filepath.Base(cfg.URL))
@@ -41,18 +43,18 @@ func CollectFromArchive(cfg SourceConfig) (*CollectionResult, error) {
 	}
 
 	if strings.HasSuffix(cfg.URL, ".zip") {
-		if err := extractZip(tmpFile, cfg.LocalPath); err != nil {
+		if err := extractZip(tmpFile, cfg.Path); err != nil {
 			return nil, err
 		}
 	} else if strings.HasSuffix(cfg.URL, ".tar.gz") || strings.HasSuffix(cfg.URL, ".tgz") {
-		if err := extractTarGz(tmpFile, cfg.LocalPath); err != nil {
+		if err := extractTarGz(tmpFile, cfg.Path); err != nil {
 			return nil, err
 		}
 	} else {
 		return nil, fmt.Errorf("unsupported archive format")
 	}
 
-	return scanFiles(cfg.LocalPath)
+	return scanFiles(cfg.Path)
 }
 
 // extractZip extracts ZIP archives.

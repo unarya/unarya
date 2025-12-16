@@ -1,14 +1,18 @@
-package collector
+package types
 
-import "errors"
+import (
+	"context"
+	"errors"
+)
 
 // SourceConfig defines the configuration for a source collection request.
 type SourceConfig struct {
-	Type      string // "git", "archive", "url"
-	URL       string
-	Branch    string
-	Token     string
-	LocalPath string
+	Ctx    context.Context
+	Type   string // "git", "archive", "url"
+	URL    string
+	Branch string
+	Token  string
+	Path   string
 }
 
 // FileInfo represents a collected file's metadata.
@@ -25,6 +29,7 @@ type CollectionResult struct {
 	TotalSize int64
 	Language  []string
 	Error     error
+	Dir       string
 }
 
 // ErrInvalidSourceType is returned when the source type is unsupported.

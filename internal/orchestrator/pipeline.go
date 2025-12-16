@@ -6,7 +6,7 @@ import (
 	"time"
 )
 
-// Orchestrator coordinates multi-service pipelines
+// Orchestrator coordinates multi-services pipelines
 type Orchestrator struct {
 	StateManager *StateManager
 	Client       *PythonClient
@@ -38,7 +38,7 @@ func (o *Orchestrator) ExecutePipeline(req *Request) (*Result, error) {
 	}
 	o.StateManager.Update("parser", "success")
 
-	// 4. Call AI model service (Python microservice)
+	// 4. Call AI model services (Python microservice)
 	o.StateManager.Update("ai", "running")
 	aiRes, err := o.CallPythonService(parsed)
 	if err != nil {
