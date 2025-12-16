@@ -57,12 +57,12 @@ fi
 if git rev-parse "${TAG}" >/dev/null 2>&1; then
     log "Tag ${TAG} already exists. Replacing..."
     git tag -d "${TAG}" >/dev/null 2>&1 || true
-    git push origin ":refs/tags/${TAG}" >/dev/null 2>&1 || true
+    git push -u origin ":refs/tags/${TAG}" >/dev/null 2>&1 || true
 fi
 
 # Create and push new tag
 git tag "${TAG}"
-git push origin "${TAG}"
+git push -u origin "${TAG}"
 success "Released ${TAG} successfully!"
 
 # --------------------------------------------------------------------
@@ -95,7 +95,7 @@ done
 if ! git diff --quiet || ! git diff --cached --quiet; then
     git add cmd/**/go.mod cmd/**/go.sum
     git commit -m "chore: bump unarya module to ${TAG}"
-    git push origin HEAD
+    git push -u origin HEAD
     success "Updated go.mod files to ${TAG}"
 else
     log "No dependency changes to commit."
