@@ -36,6 +36,11 @@ class CollectorServiceStub(object):
         Args:
             channel: A grpc.Channel.
         """
+        self.Ready = channel.unary_unary(
+                '/collectorpb.CollectorService/Ready',
+                request_serializer=collector__pb2.Empty.SerializeToString,
+                response_deserializer=collector__pb2.ServiceReadyResponse.FromString,
+                _registered_method=True)
         self.CollectFromGit = channel.unary_unary(
                 '/collectorpb.CollectorService/CollectFromGit',
                 request_serializer=collector__pb2.GitRequest.SerializeToString,
@@ -56,12 +61,24 @@ class CollectorServiceStub(object):
                 request_serializer=collector__pb2.ValidateRequest.SerializeToString,
                 response_deserializer=collector__pb2.ValidateResponse.FromString,
                 _registered_method=True)
+        self.RemoveDir = channel.unary_unary(
+                '/collectorpb.CollectorService/RemoveDir',
+                request_serializer=collector__pb2.Path.SerializeToString,
+                response_deserializer=collector__pb2.ServiceOKResponse.FromString,
+                _registered_method=True)
 
 
 class CollectorServiceServicer(object):
     """--- Collector Service ---
     Responsible for fetching, cloning, and validating source code repositories
     """
+
+    def Ready(self, request, context):
+        """Checking services ready
+        """
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
 
     def CollectFromGit(self, request, context):
         """Clone repository from Git (GitHub, GitLab, Bitbucket)
@@ -91,9 +108,21 @@ class CollectorServiceServicer(object):
         context.set_details('Method not implemented!')
         raise NotImplementedError('Method not implemented!')
 
+    def RemoveDir(self, request, context):
+        """Remove Directory
+        """
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
 
 def add_CollectorServiceServicer_to_server(servicer, server):
     rpc_method_handlers = {
+            'Ready': grpc.unary_unary_rpc_method_handler(
+                    servicer.Ready,
+                    request_deserializer=collector__pb2.Empty.FromString,
+                    response_serializer=collector__pb2.ServiceReadyResponse.SerializeToString,
+            ),
             'CollectFromGit': grpc.unary_unary_rpc_method_handler(
                     servicer.CollectFromGit,
                     request_deserializer=collector__pb2.GitRequest.FromString,
@@ -114,6 +143,11 @@ def add_CollectorServiceServicer_to_server(servicer, server):
                     request_deserializer=collector__pb2.ValidateRequest.FromString,
                     response_serializer=collector__pb2.ValidateResponse.SerializeToString,
             ),
+            'RemoveDir': grpc.unary_unary_rpc_method_handler(
+                    servicer.RemoveDir,
+                    request_deserializer=collector__pb2.Path.FromString,
+                    response_serializer=collector__pb2.ServiceOKResponse.SerializeToString,
+            ),
     }
     generic_handler = grpc.method_handlers_generic_handler(
             'collectorpb.CollectorService', rpc_method_handlers)
@@ -126,6 +160,33 @@ class CollectorService(object):
     """--- Collector Service ---
     Responsible for fetching, cloning, and validating source code repositories
     """
+
+    @staticmethod
+    def Ready(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(
+            request,
+            target,
+            '/collectorpb.CollectorService/Ready',
+            collector__pb2.Empty.SerializeToString,
+            collector__pb2.ServiceReadyResponse.FromString,
+            options,
+            channel_credentials,
+            insecure,
+            call_credentials,
+            compression,
+            wait_for_ready,
+            timeout,
+            metadata,
+            _registered_method=True)
 
     @staticmethod
     def CollectFromGit(request,
@@ -225,6 +286,33 @@ class CollectorService(object):
             '/collectorpb.CollectorService/ValidateSource',
             collector__pb2.ValidateRequest.SerializeToString,
             collector__pb2.ValidateResponse.FromString,
+            options,
+            channel_credentials,
+            insecure,
+            call_credentials,
+            compression,
+            wait_for_ready,
+            timeout,
+            metadata,
+            _registered_method=True)
+
+    @staticmethod
+    def RemoveDir(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(
+            request,
+            target,
+            '/collectorpb.CollectorService/RemoveDir',
+            collector__pb2.Path.SerializeToString,
+            collector__pb2.ServiceOKResponse.FromString,
             options,
             channel_credentials,
             insecure,

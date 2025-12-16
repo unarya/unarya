@@ -7,6 +7,9 @@ option go_package = "github.com/unarya/unarya/lib/proto/pb/collectorpb";
 // --- Collector Service ---
 // Responsible for fetching, cloning, and validating source code repositories
 service CollectorService {
+  // Checking service ready
+  rpc Ready(Empty) returns (ServiceReadyResponse);
+
   // Clone repository from Git (GitHub, GitLab, Bitbucket)
   rpc CollectFromGit(GitRequest) returns (CollectorResponse);
 
@@ -18,6 +21,9 @@ service CollectorService {
 
   // Validate incoming source URL
   rpc ValidateSource(ValidateRequest) returns (ValidateResponse);
+
+  // Remove Directory
+  rpc RemoveDir(Path) returns (ServiceOKResponse);
 }
 
 // --- Messages ---
@@ -48,4 +54,18 @@ message ValidateResponse {
 message CollectorResponse {
   string message = 1;
   string path = 2;
+}
+
+message ServiceReadyResponse {
+  string status = 1;
+}
+
+message Empty {}
+
+message ServiceOKResponse {
+  string message = 1;
+}
+
+message Path {
+  string name = 1;
 }

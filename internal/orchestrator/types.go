@@ -10,7 +10,7 @@ type Request struct {
 	SourceType    string // "git", "archive", "url"
 }
 
-// ParsedData represents output from the Parser service
+// ParsedData represents output from the Parser services
 type ParsedData struct {
 	Language     string
 	Dependencies []string

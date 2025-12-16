@@ -1,14 +1,16 @@
-package parser
+package domains
 
 import (
 	"io/fs"
 	"path/filepath"
 	"strings"
+
+	"github.com/unarya/unarya/internal/parser"
 )
 
 // AnalyzeStructure inspects the directory and infers architecture patterns.
-func AnalyzeStructure(rootPath string) ProjectStructure {
-	structure := ProjectStructure{}
+func AnalyzeStructure(rootPath string) parser.ProjectStructure {
+	structure := parser.ProjectStructure{}
 	filepath.WalkDir(rootPath, func(path string, d fs.DirEntry, err error) error {
 		if err != nil {
 			return err

@@ -15,7 +15,7 @@ func NewJWTService(secret string) *JWTService {
 	return &JWTService{Secret: secret}
 }
 
-// GenerateToken creates a JWT for a user or service identity
+// GenerateToken creates a JWT for a user or services identity
 func (j *JWTService) GenerateToken(subject string, ttl time.Duration) (string, error) {
 	claims := jwt.MapClaims{
 		"sub": subject,

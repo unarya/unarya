@@ -4,74 +4,82 @@ import (
 	"context"
 	"fmt"
 	"log"
+	"net/url"
 	"os"
-	"os/exec"
 	"path/filepath"
 	"strings"
-	"time"
 
-	"github.com/unarya/unarya/internal/collector/service"
+	"github.com/unarya/unarya/internal/collector/services"
 	pb "github.com/unarya/unarya/lib/proto/pb/collectorpb"
 	"github.com/unarya/unarya/pkg/types"
 )
 
 type Handler struct {
 	pb.UnimplementedCollectorServiceServer
-	svc *service.CollectorService
+	svc *services.CollectorService
 }
 
 func NewCollectorHandler() *Handler {
 	return &Handler{
-		svc: service.New(),
+		svc: services.New(),
 	}
 }
 
 func (h *Handler) CollectFromGit(ctx context.Context, req *pb.GitRequest) (*pb.CollectorResponse, error) {
-	dir := filepath.Join(os.TempDir(), fmt.Sprintf("repo-%d", time.Now().UnixNano()))
-	cloneCmd := []string{"git", "clone"}
+	// Parse the original URL
+	u, err := url.Parse(req.Url)
+	if err != nil {
+		return nil, fmt.Errorf("invalid git url: %w", err)
+	}
 
-	if req.Branch != "" {
-		cloneCmd = append(cloneCmd, "-b", req.Branch)
-	}
+	// Only inject token if token existing for private repos
+	originalURL := req.Url
 	if req.Token != "" {
-		urlParts := strings.SplitN(req.Url, "://", 2)
-		if len(urlParts) == 2 {
-			req.Url = fmt.Sprintf("https://%s@%s", req.Token, urlParts[1])
-		}
+		// Inject token as basic auth (GitHub/GitLab compatible)
+		u.User = url.UserPassword("oauth2", req.Token)
+		originalURL = u.String()
 	}
+
+	// Determine local path for cloning
+	urlForPath, _ := url.Parse(req.Url)
+	urlForPath.User = nil // Remove any existing auth
+	path := filepath.Join("", urlForPath.Host, strings.TrimSuffix(urlForPath.Path, ".git"))
 
 	gitConfig := types.SourceConfig{
-		Type:      "git",
-		URL:       req.Url,
-		Branch:    req.Branch,
-		Token:     req.Token,
-		LocalPath: "",
+		Ctx:    ctx,
+		Type:   "git",
+		URL:    originalURL,
+		Branch: req.Branch,
+		Token:  req.Token,
+		Path:   path,
 	}
+
 	if err := h.svc.ValidateSource(gitConfig); err != nil {
 		return nil, fmt.Errorf("invalid source: %w", err)
 	}
-	result, err := h.svc.CollectFromGit(types.SourceConfig{
-		URL:    req.Url,
-		Token:  req.Token,
-		Branch: req.Branch,
-	})
+
+	result, err := h.svc.CollectFromGit(gitConfig)
 	if err != nil {
 		return nil, err
 	}
-	// Preprocessing for metadata after cloned git source
-	fmt.Printf("Git resource data: %v", result)
-	cloneCmd = append(cloneCmd, req.Url, dir)
 
-	cmd := exec.CommandContext(ctx, cloneCmd[0], cloneCmd[1:]...)
-	output, err := cmd.CombinedOutput()
-	if err != nil {
-		return nil, fmt.Errorf("git clone failed: %v\n%s", err, string(output))
-	}
-
-	log.Printf("✅ Cloned repository: %s (branch: %s)", req.Url, req.Branch)
+	log.Printf("[INFO]: Cloned repository: %s (branch: %s)", req.Url, req.Branch)
 
 	return &pb.CollectorResponse{
 		Message: "ok",
-		Path:    dir,
+		Path:    result.Dir,
+	}, nil
+}
+
+func (h *Handler) Ready(ctx context.Context, r *pb.Empty) (*pb.ServiceReadyResponse, error) {
+	return &pb.ServiceReadyResponse{
+		Status: "ok",
+	}, nil
+}
+
+func (h *Handler) RemoveDir(ctx context.Context, r *pb.Path) (*pb.ServiceOKResponse, error) {
+	os.RemoveAll(r.Name)
+	return &pb.ServiceOKResponse{
+		Message: "ok",
 	}, nil
 }

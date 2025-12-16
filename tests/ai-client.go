@@ -16,7 +16,7 @@ func main() {
 		grpc.WithTransportCredentials(insecure.NewCredentials()),
 	)
 	if err != nil {
-		log.Fatalf("❌ Cannot connect to ML service: %v", err)
+		log.Fatalf("❌ Cannot connect to ML services: %v", err)
 	}
 	defer conn.Close()
 

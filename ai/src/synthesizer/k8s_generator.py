@@ -41,7 +41,7 @@ class K8sGenerator:
 
     def generate_ingress(self, config: AppConfig) -> str:
         if not config.domain:
-            return "# No domain specified — skipping ingress generation.\n"
+            return "# No domains specified — skipping ingress generation.\n"
         ingress = {
             "apiVersion": "networking.k8s.io/v1",
             "kind": "Ingress",
@@ -54,7 +54,7 @@ class K8sGenerator:
                             "path": "/",
                             "pathType": "Prefix",
                             "backend": {
-                                "service": {
+                                "services": {
                                     "name": f"{config.name}-svc",
                                     "port": {"number": (config.ports or [80])[0]}
                                 }

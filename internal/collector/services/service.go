@@ -1,7 +1,7 @@
-package service
+package services
 
 import (
-	"github.com/unarya/unarya/internal/collector/domain"
+	"github.com/unarya/unarya/internal/collector/domains"
 	"github.com/unarya/unarya/pkg/types"
 )
 
@@ -12,17 +12,17 @@ func New() *CollectorService {
 }
 
 func (s *CollectorService) CollectFromGit(cfg types.SourceConfig) (*types.CollectionResult, error) {
-	return domain.CollectFromGit(cfg)
+	return domains.CollectFromGit(cfg)
 }
 
 func (s *CollectorService) CollectFromArchive(cfg types.SourceConfig) (*types.CollectionResult, error) {
-	return domain.CollectFromArchive(cfg)
+	return domains.CollectFromArchive(cfg)
 }
 
 func (s *CollectorService) CollectFromURL(cfg types.SourceConfig) (*types.CollectionResult, error) {
-	return domain.CollectFromURL(cfg)
+	return domains.CollectFromURL(cfg)
 }
 
 func (s *CollectorService) ValidateSource(cfg types.SourceConfig) error {
-	return domain.ValidateSource(cfg)
+	return domains.ValidateSource(cfg)
 }

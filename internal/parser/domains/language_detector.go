@@ -1,4 +1,4 @@
-package parser
+package domains
 
 import (
 	"path/filepath"

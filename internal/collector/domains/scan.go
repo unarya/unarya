@@ -1,5 +1,4 @@
-// file: /internal/collector/scan.go
-package domain
+package domains
 
 import (
 	"io/fs"

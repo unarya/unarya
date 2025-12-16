@@ -20,14 +20,14 @@ func Load() *Config {
 	_ = godotenv.Load()
 
 	cfg := &Config{
-		ServiceName: getEnv("SERVICE_NAME", "unarya-service"),
+		ServiceName: getEnv("SERVICE_NAME", "unarya-services"),
 		GRPCPort:    getEnv("GRPC_PORT", "50051"),
 		JWTSecret:   getEnv("JWT_SECRET", "supersecret"),
 		APIKey:      getEnv("API_KEY", ""),
 		Env:         getEnv("ENV", "development"),
 	}
 
-	log.Printf("[Config] Loaded for service: %s", cfg.ServiceName)
+	log.Printf("[Config] Loaded for services: %s", cfg.ServiceName)
 	return cfg
 }
 

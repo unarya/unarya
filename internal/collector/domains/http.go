@@ -1,4 +1,4 @@
-package domain
+package domains
 
 import (
 	"fmt"
@@ -15,15 +15,15 @@ func CollectFromURL(cfg types.SourceConfig) (*types.CollectionResult, error) {
 	if cfg.URL == "" {
 		return nil, fmt.Errorf("url is empty")
 	}
-	if cfg.LocalPath == "" {
-		cfg.LocalPath = filepath.Join(os.TempDir(), "collector_http")
+	if cfg.Path == "" {
+		cfg.Path = filepath.Join(os.TempDir(), "collector_http")
 	}
-	if err := os.MkdirAll(cfg.LocalPath, os.ModePerm); err != nil {
+	if err := os.MkdirAll(cfg.Path, os.ModePerm); err != nil {
 		return nil, err
 	}
 
 	fileName := filepath.Base(cfg.URL)
-	targetPath := filepath.Join(cfg.LocalPath, fileName)
+	targetPath := filepath.Join(cfg.Path, fileName)
 
 	resp, err := http.Get(cfg.URL)
 	if err != nil {
@@ -41,5 +41,5 @@ func CollectFromURL(cfg types.SourceConfig) (*types.CollectionResult, error) {
 		return nil, err
 	}
 
-	return scanFiles(cfg.LocalPath)
+	return scanFiles(cfg.Path)
 }

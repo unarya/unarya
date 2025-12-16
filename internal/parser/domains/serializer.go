@@ -1,11 +1,13 @@
-package parser
+package domains
 
 import (
 	"encoding/json"
+
+	"github.com/unarya/unarya/internal/parser"
 )
 
 // SerializeToJSON converts ParseResult into a JSON-serializable structure.
-func SerializeToJSON(result *ParseResult) (string, error) {
+func SerializeToJSON(result *parser.ParseResult) (string, error) {
 	data, err := json.MarshalIndent(result, "", "  ")
 	if err != nil {
 		return "", err
@@ -14,7 +16,7 @@ func SerializeToJSON(result *ParseResult) (string, error) {
 }
 
 // SerializeASTAsTree returns a compact tree representation of AST.
-func SerializeASTAsTree(node *ASTNode, depth int) string {
+func SerializeASTAsTree(node *parser.ASTNode, depth int) string {
 	if node == nil {
 		return ""
 	}

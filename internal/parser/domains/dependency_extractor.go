@@ -1,4 +1,4 @@
-package parser
+package domains
 
 import (
 	"bufio"
@@ -6,11 +6,13 @@ import (
 	"os"
 	"path/filepath"
 	"strings"
+
+	"github.com/unarya/unarya/internal/parser"
 )
 
 // ExtractDependencies scans dependency manifest files like go.mod, package.json, requirements.txt, etc.
-func ExtractDependencies(rootPath string) ([]Dependency, error) {
-	var deps []Dependency
+func ExtractDependencies(rootPath string) ([]parser.Dependency, error) {
+	var deps []parser.Dependency
 	files := []string{"go.mod", "package.json", "requirements.txt", "pom.xml", "Cargo.toml", "composer.json", "Gemfile"}
 
 	for _, f := range files {
@@ -33,14 +35,14 @@ func ExtractDependencies(rootPath string) ([]Dependency, error) {
 	return deps, nil
 }
 
-func parseGoMod(path string) []Dependency {
+func parseGoMod(path string) []parser.Dependency {
 	f, err := os.Open(path)
 	if err != nil {
 		return nil
 	}
 	defer f.Close()
 
-	var deps []Dependency
+	var deps []parser.Dependency
 	scanner := bufio.NewScanner(f)
 	for scanner.Scan() {
 		line := strings.TrimSpace(scanner.Text())
@@ -49,14 +51,14 @@ func parseGoMod(path string) []Dependency {
 			line = strings.Trim(line, "() ")
 			parts := strings.Fields(line)
 			if len(parts) >= 2 {
-				deps = append(deps, Dependency{Name: parts[0], Version: parts[1], Source: "go.mod"})
+				deps = append(deps, parser.Dependency{Name: parts[0], Version: parts[1], Source: "go.mod"})
 			}
 		}
 	}
 	return deps
 }
 
-func parsePackageJSON(path string) []Dependency {
+func parsePackageJSON(path string) []parser.Dependency {
 	f, err := os.Open(path)
 	if err != nil {
 		return nil
@@ -68,11 +70,11 @@ func parsePackageJSON(path string) []Dependency {
 		return nil
 	}
 
-	var deps []Dependency
+	var deps []parser.Dependency
 	for _, section := range []string{"dependencies", "devDependencies"} {
 		if dmap, ok := pkg[section].(map[string]interface{}); ok {
 			for name, version := range dmap {
-				deps = append(deps, Dependency{
+				deps = append(deps, parser.Dependency{
 					Name:    name,
 					Version: version.(string),
 					Source:  "package.json",
@@ -83,14 +85,14 @@ func parsePackageJSON(path string) []Dependency {
 	return deps
 }
 
-func parseRequirements(path string) []Dependency {
+func parseRequirements(path string) []parser.Dependency {
 	f, err := os.Open(path)
 	if err != nil {
 		return nil
 	}
 	defer f.Close()
 
-	var deps []Dependency
+	var deps []parser.Dependency
 	scanner := bufio.NewScanner(f)
 	for scanner.Scan() {
 		line := strings.TrimSpace(scanner.Text())
@@ -99,7 +101,7 @@ func parseRequirements(path string) []Dependency {
 		}
 		parts := strings.Split(line, "==")
 		if len(parts) == 2 {
-			deps = append(deps, Dependency{Name: parts[0], Version: parts[1], Source: "requirements.txt"})
+			deps = append(deps, parser.Dependency{Name: parts[0], Version: parts[1], Source: "requirements.txt"})
 		}
 	}
 	return deps
